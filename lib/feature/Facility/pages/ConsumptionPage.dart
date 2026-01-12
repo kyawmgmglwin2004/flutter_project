@@ -345,8 +345,8 @@ class Consumptionpage extends StatelessWidget {
                     ),
                     onPressed: () {
                       final List<PowerHistoryData> historyData = getMockHistoryData();
-                      // Navigator.pushReplacementNamed(context, AppRoute.history, arguments: historyData);
-                      Navigator.pushReplacementNamed(context, AppRoute.historytest);
+                      Navigator.pushNamed(context, AppRoute.history, arguments: historyData);
+                      // Navigator.pushReplacementNamed(context, AppRoute.history, arguments: data);
 
                     },
                     child: const Text("電力量履歴確認"),

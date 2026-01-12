@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ntt/core/route/app_route.dart';
 import 'package:ntt/mock/consumption_detail_mock_data.dart';
 import 'package:ntt/mock/consumption_mock_data.dart';
+// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Searchpage extends StatefulWidget {
   const Searchpage({super.key});
@@ -13,6 +14,7 @@ class Searchpage extends StatefulWidget {
 class _SearchpageState extends State<Searchpage> {
 
   final facilityController = TextEditingController();
+  // final FlutterSecureStorage storage = FlutterSecureStorage();
   bool isLoading = false;
   ConsumptionData? foundFacility;
 
@@ -45,6 +47,7 @@ class _SearchpageState extends State<Searchpage> {
         isLoading = false;
       });
       print("reach page");
+      // await storage.write(key:  'facilityId', value: id);
 
       Navigator.pushReplacementNamed(context, AppRoute.consumption, arguments: id);
     }
