@@ -55,8 +55,8 @@ class _HistorytestpageState extends State<Historytestpage> {
                         title: const Text(
                           "Day (နေ့)",
                           style: TextStyle(
-                            color: Colors.red,      // အနီရောင်
-                            fontWeight: FontWeight.bold, // ထူထဲ့
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
                             fontSize: 17,
                           ),
                         ),
@@ -68,7 +68,6 @@ class _HistorytestpageState extends State<Historytestpage> {
                         },
                       ),
 
-                      // Option 2: Month
                       Container(
                         height: 30,
                         width: 200,
@@ -102,17 +101,15 @@ class _HistorytestpageState extends State<Historytestpage> {
 // import 'package:flutter/material.dart';
 // import 'package:ntt/core/route/app_route.dart';
 // import 'package:ntt/mock/history_mock_data.dart';
-// import 'package:fl_chart/fl_chart.dart'; // သင်က �ု graph အတွက် package သုံးသင့်
+// import 'package:fl_chart/fl_chart.dart';
 //
 // class Historypage extends StatelessWidget {
-//   // ID ကို String ဖြစ် ခေါ်ယူပါတယ်
 //   final String facilityId;
 //
 //   const Historypage({super.key, required this.facilityId});
 //
 //   @override
 //   Widget build(BuildContext context) {
-//     // Mock Data ကို ID နဲ့ ခေါ်ယူပါတယ်
 //     final List<PowerHistoryData> graphData = getHistoryMockData(facilityId);
 //
 //     return Scaffold(
@@ -124,7 +121,6 @@ class _HistorytestpageState extends State<Historytestpage> {
 //             const Text("Power Consumption History", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
 //             const SizedBox(height: 20),
 //
-//             // Graph Widget (သင့်အရင် graph code ကို အသုံးသည် graphData ကို ယူပါ)
 //             AspectRatio(
 //               aspectRatio: 1.5,
 //               child: BarChart(
