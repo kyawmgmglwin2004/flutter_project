@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ntt/core/route/app_route.dart';
 import 'package:ntt/mock/consumption_detail_mock_data.dart';
 import 'package:ntt/mock/consumption_mock_data.dart';
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 
 class FacilitySearch extends StatefulWidget {
   const FacilitySearch({super.key});
@@ -14,7 +15,7 @@ class FacilitySearch extends StatefulWidget {
 class _FacilitySearchState extends State<FacilitySearch> {
 
   final facilityController = TextEditingController();
-  // final FlutterSecureStorage storage = FlutterSecureStorage();
+  final FlutterSecureStorage storage = FlutterSecureStorage();
   bool isLoading = false;
   ConsumptionData? foundFacility;
 
@@ -47,7 +48,7 @@ class _FacilitySearchState extends State<FacilitySearch> {
         isLoading = false;
       });
       print("reach page");
-      // await storage.write(key:  'facilityId', value: id);
+      await storage.write(key:  'facilityId', value: id);
 
       Navigator.pushReplacementNamed(context, AppRoute.consumption, arguments: id);
     }
@@ -124,46 +125,15 @@ class _FacilitySearchState extends State<FacilitySearch> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "施設ID",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
+              _labelText(),
               SizedBox(height: 8,),
               Row(
                 children: [
                   Row(
                     children: [
-                      SizedBox(
-                          width: 250,
-                          height: 50,
-                          child: TextFormField(
-                            controller: facilityController,
-                            maxLength: 6,
-                            decoration: InputDecoration(
-                              counterText: "",
-                              isDense: true,
-                              floatingLabelBehavior: FloatingLabelBehavior.never,
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 24,
-                                  horizontal: 12
-                              ),
-
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(color: Colors.black, width: 1),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
-                                borderSide: BorderSide(color: Colors.orange, width: 2),
-                              ),
-                            ),
-                          )
-                      ),
+                     _inputBox(),
                       SizedBox(width: 10),
-                    SearchButton(),
+                    _SearchButton(),
                     ],
                   )
                 ],
@@ -175,7 +145,45 @@ class _FacilitySearchState extends State<FacilitySearch> {
       ),
     );
   }
-  Widget SearchButton() {
+
+  Widget _labelText() {
+    return Text(
+      "施設ID",
+      style: TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Colors.black,
+      ),
+    );
+  }
+  Widget _inputBox() {
+    return  SizedBox(
+        width: 250,
+        height: 50,
+        child: TextFormField(
+          controller: facilityController,
+          maxLength: 6,
+          decoration: InputDecoration(
+            counterText: "",
+            isDense: true,
+            floatingLabelBehavior: FloatingLabelBehavior.never,
+            contentPadding: const EdgeInsets.symmetric(
+                vertical: 24,
+                horizontal: 12
+            ),
+
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.black, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: Colors.orange, width: 2),
+            ),
+          ),
+        )
+    );
+  }
+  Widget _SearchButton() {
     return ElevatedButton(
       onPressed:  () {
         if(!isLoading) {
