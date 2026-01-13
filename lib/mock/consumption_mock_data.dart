@@ -59,7 +59,7 @@ class ConsumptionData {
     };
   }
 
-  // Future<Facility?> fetchFacility(String id) async {
+  // Future<FacilitySearch?> fetchFacility(String id) async {
   //   await Future.delayed(const Duration(seconds: 1));
   //
   //   try {

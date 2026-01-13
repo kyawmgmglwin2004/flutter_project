@@ -1,0 +1,1 @@
+export 'package:ntt/feature/consumption/pages/consumption_page.dart';

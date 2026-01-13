@@ -22,7 +22,7 @@ class _HistorytestpageState extends State<Historytestpage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text("Facility Name_",
+                      Text("FacilitySearch Name_",
                       style:TextStyle(
                         color: Colors.blue[500],
                         fontWeight: FontWeight.bold,
@@ -113,12 +113,12 @@ class _HistorytestpageState extends State<Historytestpage> {
 //     final List<PowerHistoryData> graphData = getHistoryMockData(facilityId);
 //
 //     return Scaffold(
-//       appBar: AppBar(title: Text("History: $facilityId")),
+//       appBar: AppBar(title: Text("history: $facilityId")),
 //       body: SingleChildScrollView(
 //         padding: const EdgeInsets.all(16.0),
 //         child: Column(
 //           children: [
-//             const Text("Power Consumption History", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+//             const Text("Power consumption history", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
 //             const SizedBox(height: 20),
 //
 //             AspectRatio(

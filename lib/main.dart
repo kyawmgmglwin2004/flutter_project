@@ -3,10 +3,10 @@
 // import 'package:flutter/material.dart';
 // import 'package:ntt/core/route/app_route.dart';
 // import 'package:ntt/core/theme/app_theme.dart';
-// import 'package:ntt/feature/Facility/facility_index.dart';
-// import 'package:ntt/feature/Facility/pages/ConsumptionPage.dart';
-// import 'package:ntt/feature/Facility/pages/HistoryPage.dart';
-// import 'package:ntt/feature/Facility/pages/HistoryTestPage.dart';
+// import 'package:ntt/feature/FacilitySearch/facility_index.dart';
+// import 'package:ntt/feature/FacilitySearch/pages/consumption_page.dart';
+// import 'package:ntt/feature/FacilitySearch/pages/HistoryPage.dart';
+// import 'package:ntt/feature/FacilitySearch/pages/HistoryTestPage.dart';
 //
 // import 'mock/history_mock_data.dart';
 //
@@ -51,10 +51,10 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:ntt/core/route/app_route.dart';
 import 'package:ntt/core/theme/app_theme.dart';
-import 'package:ntt/feature/Facility/facility_index.dart';
-import 'package:ntt/feature/Facility/pages/ConsumptionPage.dart';
-import 'package:ntt/feature/Facility/pages/HistoryPage.dart';
-import 'package:ntt/feature/Facility/pages/HistoryTestPage.dart';
+import 'package:ntt/feature/FacilitySearch/facility_index.dart';
+import 'package:ntt/feature/FacilitySearch/pages/ConsumptionPage.dart';
+import 'package:ntt/feature/FacilitySearch/pages/HistoryPage.dart';
+import 'package:ntt/feature/FacilitySearch/pages/HistoryTestPage.dart';
 
 import 'mock/history_mock_data.dart';
 
@@ -82,7 +82,7 @@ class MyApp extends StatelessWidget {
 
           if (args is Map<String, dynamic>) {
             // New way: Map with facility info
-            final facilityName = args['facilityName'] ?? 'Unknown Facility';
+            final facilityName = args['facilityName'] ?? 'Unknown FacilitySearch';
             final facilityId = args['facilityId'] ?? 'F001';
 
             return MaterialPageRoute(
@@ -98,7 +98,7 @@ class MyApp extends StatelessWidget {
             // Old way: Just data list (for backward compatibility)
             return MaterialPageRoute(
               builder: (_) => HistoryPage(
-                facilityName: 'Power History',
+                facilityName: 'Power history',
                 facilityId: 'HIST001',
                 initialHourlyData: args, // Use the passed data
                 initialDailyData: getMockDailyData(),
@@ -109,7 +109,7 @@ class MyApp extends StatelessWidget {
             // Default if no arguments
             return MaterialPageRoute(
               builder: (_) => HistoryPage(
-                facilityName: 'Demo Facility',
+                facilityName: 'Demo FacilitySearch',
                 facilityId: 'DEMO001',
                 initialHourlyData: getMockHourlyData(),
                 initialDailyData: getMockDailyData(),

@@ -14,13 +14,17 @@ class Consumptionpage extends StatelessWidget {
     ConsumptionData? currentData;
     final List<ConsumptionData> data = getMockData();
 
+
+
     for (var item in data) {
       if (item.facilityId == facilityId) {
+        print("reach consumption page");
         currentData = item;
       }
     }
 
     return Scaffold(
+        key: const Key('consumption_screen'),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -183,7 +187,6 @@ class Consumptionpage extends StatelessWidget {
     );
   }
 
-  // ================= UI WIDGETS =================
 
   Widget _buildRow(String label, String value) {
     return Padding(

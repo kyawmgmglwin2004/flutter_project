@@ -6,7 +6,6 @@ import 'package:ntt/mock/history_mock_data.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-// Display Type Enum
 enum DisplayType { hourly, daily, monthly }
 
 class HistoryPage extends StatefulWidget {
@@ -56,7 +55,7 @@ class _HistoryPageState extends State<HistoryPage> {
   //       setState(() {
   //         _facilityId = id; // ✅ Store in state variable
   //       });
-  //       print('Facility ID found: $id');
+  //       print('FacilitySearch ID found: $id');
   //     } else {
   //       // Use the facilityId from widget if not found in storage
   //       setState(() {
@@ -71,7 +70,7 @@ class _HistoryPageState extends State<HistoryPage> {
   //       _facilityId = widget.facilityId;
   //     });
   //   }
-  // }
+  //
   @override
   void initState() {
     super.initState();
@@ -94,7 +93,7 @@ class _HistoryPageState extends State<HistoryPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text("Facility Name_",
+                  Text("施設名_電力量履歴",
                     style:TextStyle(
                         color: Colors.blue[500],
                         fontWeight: FontWeight.bold,
@@ -142,7 +141,7 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
           Expanded(
             child: Text(
-              '${widget.facilityName} - Electricity Usage History',
+              '${widget.facilityName} - Electricity Usage history',
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -155,7 +154,6 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  // 2. Display Type Section - Items #2-5
   Widget _buildDisplayTypeSection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
@@ -164,11 +162,11 @@ class _HistoryPageState extends State<HistoryPage> {
         children: [
           // Item #2: Display type label
           Text(
-            'Display Type',
+            '表示種別',
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.grey[500],
+              color: Colors.red[900],
             ),
           ),
           const SizedBox(height: 5),
@@ -801,9 +799,9 @@ class _HistoryPageState extends State<HistoryPage> {
           children: [
             _legendItem(Colors.green, 'Generated Electricity'),
             const SizedBox(width: 16),
-            _legendItem(Colors.red, 'Home Consumption'),
+            _legendItem(Colors.red, 'Home consumption'),
             const SizedBox(width: 16),
-            _legendItem(Colors.blue, 'Electricity Consumption'),
+            _legendItem(Colors.blue, 'Electricity consumption'),
           ],
         ),
 

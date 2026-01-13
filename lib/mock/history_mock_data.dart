@@ -87,7 +87,7 @@ List<PowerHistoryData> getMockMonthlyData() {
   });
 }
 
-// Mock Data for Facility List
+// Mock Data for FacilitySearch List
 class Facility {
   final String id;
   final String name;

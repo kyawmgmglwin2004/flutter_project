@@ -12,7 +12,7 @@
 //   final _formKey = GlobalKey<FormState>();
 //   final facilityController = TextEditingController();
 //
-//   Facility? foundFacility;
+//   FacilitySearch? foundFacility;
 //   bool isLoading = false;
 //
 //   Future<void> searchFacility() async {
@@ -107,7 +107,7 @@
 //                 ),
 //               ),
 //             if (!isLoading && foundFacility == null)
-//               const Text("Facility not found"),
+//               const Text("FacilitySearch not found"),
 //           ],
 //         ),
 //       ),
