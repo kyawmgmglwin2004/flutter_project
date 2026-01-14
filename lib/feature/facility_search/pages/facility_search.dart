@@ -54,6 +54,7 @@ class _FacilitySearchState extends State<FacilitySearch> {
     }
   }
 
+
   void ShowErrorDialog(BuildContext context) {
     showDialog(context: context,
         barrierDismissible: false,
@@ -147,7 +148,7 @@ class _FacilitySearchState extends State<FacilitySearch> {
   }
 
   Widget _labelText() {
-    return Text(
+    return const Text(
       "施設ID",
       style: TextStyle(
         fontWeight: FontWeight.bold,
@@ -155,11 +156,13 @@ class _FacilitySearchState extends State<FacilitySearch> {
       ),
     );
   }
+
   Widget _inputBox() {
     return  SizedBox(
         width: 250,
         height: 50,
-        child: TextFormField(
+        child:  TextFormField(
+          textAlignVertical: TextAlignVertical(y: 1),
           controller: facilityController,
           maxLength: 6,
           decoration: InputDecoration(
@@ -216,6 +219,8 @@ class _FacilitySearchState extends State<FacilitySearch> {
       ),
     );
   }
+
+
 
 }
 
