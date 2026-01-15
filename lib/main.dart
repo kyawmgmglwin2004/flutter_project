@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
           );
         }
 
-        // Return null for unknown routes
+
         return null;
       },
       theme: AppTheme.lightTheme,

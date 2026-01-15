@@ -43,11 +43,11 @@ class Consumptionpage extends StatelessWidget {
               const SizedBox(height: 40),
 
               _twoColumnRow(
-                leftTitle: "現在の発電電力量\n(KWh)",
+                leftTitle: "現在の発電電力量",
                 leftValue: currentData.formatValue(
                   currentData.currentPowerGeneration,
                 ),
-                rightTitle: "本日の合計発電電力量\n(KWh)",
+                rightTitle: "本日の合計発電電力量",
                 rightValue: currentData.formatValue(
                   currentData.todayTotalGeneration,
                 ),
@@ -69,11 +69,11 @@ class Consumptionpage extends StatelessWidget {
               const SizedBox(height: 24),
 
               _twoColumnRow(
-                leftTitle: "現在の使用電力量\n(KWh)",
+                leftTitle: "現在の使用電力量",
                 leftValue: currentData.formatValue(
                   currentData.currentPowerUsage,
                 ),
-                rightTitle: "本日の合計使用電力量\n(KWh)",
+                rightTitle: "本日の合計使用電力量",
                 rightValue: currentData.formatValue(
                   currentData.todayTotalPowerUsage,
                 ),

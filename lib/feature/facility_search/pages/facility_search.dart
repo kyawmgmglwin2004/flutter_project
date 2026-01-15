@@ -221,7 +221,5 @@ class _FacilitySearchState extends State<FacilitySearch> {
     );
   }
 
-
-
 }
 
