@@ -1,0 +1,8 @@
+Category,Checklist Item,Manager's View (Why?),Technical Detail (For Devs),Simple Code Example,Status
+Project Structure,Standard folder structure,"Keeps code organized so updates are fast and cheap.",Use lib/core, lib/features, test/ folders.,"lib/features/home/","Pending"
+File Name,Consistent naming convention,"Standard names prevent errors and confusion.",Use snake_case for all file names (e.g. user_login.dart).,"user_profile.dart","Pending"
+Code Quality,Follow Dart Style Guide,"Clean code is cheaper to fix and easier to read.",Use PascalCase for Classes, camelCase for variables. Use const.,"class User {}","Pending"
+Widgets (UI),Avoid unnecessary rebuilds,"Optimization ensures the app runs smooth and fast.",Use const for widgets that do not change.,"const Text('Hi')","Pending"
+Performance,Optimize build methods,"Avoids app lagging or freezing during use.",Move heavy logic to initState(), keep build() clean.,"initState() { loadData(); }","Pending"
+Testing,Unit & Widget Tests implemented,"Automated tests catch bugs before users do.",Test logic and UI flows.,"test('check title', () {})","Pending"
+Security,No hardcoded secrets,"Protects user privacy and company data.",Use flutter_secure_storage for secrets.,"storage.write(key: 'token', ...)","Pending"

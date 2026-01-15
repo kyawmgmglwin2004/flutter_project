@@ -162,17 +162,18 @@ class _FacilitySearchState extends State<FacilitySearch> {
         width: 250,
         height: 50,
         child:  TextFormField(
-          textAlignVertical: TextAlignVertical(y: 1),
+          textAlignVertical: TextAlignVertical.center,
           controller: facilityController,
           maxLength: 6,
           decoration: InputDecoration(
             counterText: "",
             isDense: true,
             floatingLabelBehavior: FloatingLabelBehavior.never,
-            contentPadding: const EdgeInsets.symmetric(
-                vertical: 24,
-                horizontal: 12
-            ),
+            // contentPadding: const EdgeInsets.symmetric(
+            //     vertical: 10,
+            //     horizontal: 12
+            // ),
+            contentPadding: const EdgeInsets.only(right: 12, bottom: 28, left: 12, top: 2),
 
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
