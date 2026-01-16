@@ -30,7 +30,6 @@ class HistoryPage extends StatefulWidget {
 }
 
 class _HistoryPageState extends State<HistoryPage> {
-  // State variables
   late List<PowerHistoryData> _currentData;
   DisplayType _selectedDisplayType = DisplayType.hourly;
   DateTime _selectedDate = DateTime.now();
@@ -42,7 +41,7 @@ class _HistoryPageState extends State<HistoryPage> {
   bool _showCalendarPanel = false;
   String _facilityId = "";
 
-  // Date formatters
+
   final DateFormat _dateFormat = DateFormat('yyyy/MM/dd');
   final DateFormat _monthFormat = DateFormat('yyyy/MM');
 
@@ -308,7 +307,7 @@ class _HistoryPageState extends State<HistoryPage> {
               ),
               child: Row(
                   children: [ IconButton(
-                    icon:  Icon(Icons.calendar_month, size: 28, color: Colors.red[900],),
+                    icon:  Icon(Icons.calendar_month, size: 28, color: Colors.red[900]),
                     onPressed: () {
                       setState(() {
                         _showCalendarPanel = !_showCalendarPanel;
@@ -577,21 +576,59 @@ class _HistoryPageState extends State<HistoryPage> {
           ),
         ],
       ),
-      child: TableCalendar(
-        firstDay: DateTime.now().subtract(const Duration(days: 365)),
-        lastDay: DateTime.now(),
-        focusedDay: _selectedDate,
-        selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-        onDaySelected: (selectedDay, focusedDay) {
-          setState(() {
-            _selectedDate = selectedDay;
-            _showCalendarPanel = false;
-          });
-        },
-        headerStyle: const HeaderStyle(
-          formatButtonVisible: false,
-          titleCentered: true,
+      child: Column(
+        children: [ TableCalendar(
+          firstDay: DateTime.now().subtract(const Duration(days: 365)),
+          lastDay: DateTime.now(),
+          focusedDay: _selectedDate,
+          selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+          onDaySelected: (selectedDay, focusedDay) {
+            setState(() {
+              _selectedDate = selectedDay;
+              _showCalendarPanel = false;
+            });
+          },
+          calendarStyle: CalendarStyle(
+            selectedDecoration: BoxDecoration(
+              color: Colors.red[900],
+              shape: BoxShape.rectangle
+            ),
+            selectedTextStyle: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold
+            ),
+            todayDecoration: BoxDecoration(
+              color: Colors.grey,
+              shape:  BoxShape.rectangle,
+              border: Border.all(color: Colors.red.shade900, width: 2 ),
+            ),
+            todayTextStyle: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+            defaultTextStyle: const TextStyle(color: Colors.black87),
+            weekendTextStyle: const TextStyle(color: Colors.redAccent),
+            outsideTextStyle: const TextStyle(color: Colors.grey),
+          ),
+          headerStyle: const HeaderStyle(
+            formatButtonVisible: false,
+            titleCentered: true,
+            leftChevronIcon: Icon(Icons.arrow_circle_left_sharp, color: Colors.red, size: 35,),
+            rightChevronIcon: Icon(Icons.arrow_circle_right_sharp, color: Colors.red, size: 35,),
+          ),
         ),
+          ElevatedButton(
+              onPressed: () {},
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
+                  child: Text("OK")),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red[900],
+              foregroundColor: Colors.white
+            ),
+          )
+    ],
       ),
     );
   }
