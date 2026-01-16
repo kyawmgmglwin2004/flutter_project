@@ -31,7 +31,8 @@ class MyApp extends StatelessWidget {
           final args = settings.arguments;
 
           if (args is Map<String, dynamic>) {
-            final facilityName = args['facilityName'] ?? 'Unknown FacilitySearch';
+            final facilityName =
+                args['facilityName'] ?? 'Unknown FacilitySearch';
             final facilityId = args['facilityId'] ?? 'F001';
 
             return MaterialPageRoute(
@@ -74,7 +75,6 @@ class MyApp extends StatelessWidget {
             builder: (_) => Consumptionpage(facilityId: facilityId),
           );
         }
-
 
         return null;
       },
