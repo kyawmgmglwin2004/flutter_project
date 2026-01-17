@@ -14,8 +14,6 @@ class Consumptionpage extends StatelessWidget {
     ConsumptionData? currentData;
     final List<ConsumptionData> data = getMockData();
 
-
-
     for (var item in data) {
       if (item.facilityId == facilityId) {
         print("reach consumption page");
@@ -95,7 +93,6 @@ class Consumptionpage extends StatelessWidget {
     );
   }
 
-
   Widget _buildRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
@@ -113,7 +110,8 @@ class Consumptionpage extends StatelessWidget {
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(color: Colors.blue,
+              style: const TextStyle(
+                color: Colors.blue,
                 fontSize: 15,
                 fontWeight: FontWeight.w600,
               ),
@@ -205,6 +203,7 @@ class Consumptionpage extends StatelessWidget {
       ],
     );
   }
+
   Widget _searchPageButton(BuildContext context) {
     return Expanded(
       child: ElevatedButton(
@@ -217,17 +216,15 @@ class Consumptionpage extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Navigator.pushReplacementNamed(
-            context,
-            AppRoute.search,
-          );
+          Navigator.pushReplacementNamed(context, AppRoute.search);
         },
         child: const Text("施設検索"),
       ),
     );
   }
+
   Widget _historyPageButton(BuildContext context) {
-    return  Expanded(
+    return Expanded(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange,
@@ -239,12 +236,17 @@ class Consumptionpage extends StatelessWidget {
         ),
         onPressed: () {
           final List<PowerHistoryData> historyData = getMockHistoryData();
-          Navigator.pushNamed(context, AppRoute.history, arguments: historyData);
+          Navigator.pushNamed(
+            context,
+            AppRoute.history,
+            arguments: historyData,
+          );
         },
         child: const Text("電力量履歴確認"),
       ),
     );
   }
+
   Widget _infoBox({required String title, required String value}) {
     return Column(
       children: [

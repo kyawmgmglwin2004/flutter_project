@@ -15,6 +15,7 @@ class FacilitySearch extends StatefulWidget {
 class _FacilitySearchState extends State<FacilitySearch> {
 
   final facilityController = TextEditingController();
+
   final FlutterSecureStorage storage = FlutterSecureStorage();
   bool isLoading = false;
   ConsumptionData? foundFacility;
