@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       initialRoute: AppRoute.root,
       routes: {
-        AppRoute.root: (context) => const FacilitySearch(),
-        AppRoute.search: (context) => const FacilitySearch(),
+        AppRoute.root: (context) => const FacilitySearchPage(),
+        AppRoute.search: (context) => const FacilitySearchPage(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == AppRoute.history) {
@@ -72,7 +72,7 @@ class MyApp extends StatelessWidget {
           final facilityId = args is String ? args : 'F001';
 
           return MaterialPageRoute(
-            builder: (_) => Consumptionpage(facilityId: facilityId),
+            builder: (_) => ConsumptionPage(facilityId: facilityId),
           );
         }
 

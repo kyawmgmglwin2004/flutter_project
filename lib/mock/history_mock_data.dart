@@ -57,7 +57,6 @@ List<PowerHistoryData> getMockHourlyData() {
   ];
 }
 
-// Mock Data for Daily View (1-31 days)
 List<PowerHistoryData> getMockDailyData() {
   return List.generate(31, (index) {
     final day = index + 1;
@@ -71,7 +70,6 @@ List<PowerHistoryData> getMockDailyData() {
   });
 }
 
-// Mock Data for Monthly View (Jan-Dec months)
 List<PowerHistoryData> getMockMonthlyData() {
   final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
@@ -87,7 +85,6 @@ List<PowerHistoryData> getMockMonthlyData() {
   });
 }
 
-// Mock Data for FacilitySearch List
 class Facility {
   final String id;
   final String name;

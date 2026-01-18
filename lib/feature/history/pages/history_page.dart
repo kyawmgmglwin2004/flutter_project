@@ -40,6 +40,15 @@ class _HistoryPageState extends State<HistoryPage> {
   bool _showTooltip = false;
   bool _showCalendarPanel = false;
   String _facilityId = "";
+  int _selectedYear = DateTime.now().year;
+  int _startMonthForyear = DateTime.now().month;
+  int? _endMonthForYear ;
+  bool _showYearMonthPicker = false;
+  int? _startYear;
+  int? _endYear;
+
+
+
 
 
   final DateFormat _dateFormat = DateFormat('yyyy/MM/dd');
@@ -47,6 +56,341 @@ class _HistoryPageState extends State<HistoryPage> {
 
 
   final FlutterSecureStorage storage = FlutterSecureStorage();
+
+  Future<void> showyearPicker(BuildContext context) async {
+    // Create temporary variables for the dialog state
+    int tempYear = _startYear ?? DateTime.now().year;
+    int tempMonth = _startMonthForyear;
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Year Dropdown
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.arrow_left),
+                              onPressed: () {
+                                setState(() {
+                                  _selectedYear--;
+                                });
+                              },
+                            ),
+                            DropdownButton<int>(
+                              value: tempYear,
+                              items: List.generate(10, (index) {
+                                final year = DateTime.now().year - 7 + index;
+                                return DropdownMenuItem(value: year, child: Text('$year'));
+                              }),
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  tempYear = value!;
+                                });
+                              },
+                            ),
+                            const SizedBox(width: 10),
+                            Text("年", style: TextStyle(color: Colors.grey[700])),
+                          ],
+                        ),
+                        // Month Dropdown
+                        Row(
+                          children: [
+
+                            DropdownButton<int>(
+                              value: tempMonth,
+                              items: List.generate(1, (index) {
+                                final month = index + 1;
+                                return DropdownMenuItem(
+                                  value: month,
+                                  child: Text('$month'),
+                                );
+                              }),
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  tempMonth = value!;
+                                });
+                              },
+                            ),
+                            const SizedBox(width: 10),
+                            Text("月", style: TextStyle(color: Colors.grey[700])),
+                            IconButton(
+                              icon: const Icon(Icons.arrow_right),
+                              onPressed: () {
+                                setState(() {
+                                  _selectedYear++;
+                                });
+                              },
+                            ),
+
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+  Future<void> showEndYearPicker(BuildContext context) async {
+    // Handle nulls safely
+    int tempYear = _endYear ?? DateTime.now().year;
+    int tempMonth = _endMonthForYear ?? 12;
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Year Dropdown
+                        Row(
+                          children: [
+                            DropdownButton<int>(
+                              value: tempYear,
+                              items: List.generate(10, (index) {
+                                final year = DateTime.now().year - 7 + index;
+                                return DropdownMenuItem(value: year, child: Text('$year'));
+                              }),
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  tempYear = value!;
+                                });
+                              },
+                            ),
+                            const SizedBox(width: 10),
+                            Text("年", style: TextStyle(color: Colors.grey[700])),
+                          ],
+                        ),
+                        // Month Dropdown
+                        Row(
+                          children: [
+                            DropdownButton<int>(
+                              value: tempMonth,
+                              // FIX: Generate 12 months instead of 1
+                              items: List.generate(12, (index) {
+                                final month = index + 1;
+                                return DropdownMenuItem(
+                                  value: month,
+                                  child: Text('$month'),
+                                );
+                              }),
+                              onChanged: (value) {
+                                setDialogState(() {
+                                  tempMonth = value!;
+                                });
+                              },
+                            ),
+                            const SizedBox(width: 10),
+                            Text("月", style: TextStyle(color: Colors.grey[700])),
+                          ],
+                        ),
+                        IconButton(
+                          onPressed: () => Navigator.pop(context),
+                          icon: const Icon(Icons.close),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _endYear = tempYear;
+                          _endMonthForYear = tempMonth;
+                        });
+                        Navigator.pop(context);
+                      },
+                      child: const Text("OK"),
+                    )
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+
+  Future<void> showCustomMonthPicker(BuildContext context) async {
+    int tempYear = _selectedMonth?.year ?? DateTime.now().year;
+    int? tempMonth = _selectedMonth?.month;
+
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.calendar_month, color: Colors.brown , size: 40,),
+                        const SizedBox(width: 8),
+                        const Text(
+                          '月を選択',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Color(0xFF6D4C41)
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Color(0xFF6D4C41), size: 35,),
+                          onPressed: () => Navigator.pop(context),
+                        )
+                      ],
+                    ),
+
+                    const SizedBox(height: 2),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back_sharp, fontWeight: FontWeight.bold, size: 25, color: Color(0xFF6D4C41),),
+                          onPressed: () {
+                            setDialogState(() {
+                              tempYear--;
+                            });
+                          },
+                        ),
+                        Text(
+                          '$tempYear',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF6D4C41)
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_forward_sharp, fontWeight: FontWeight.bold, size: 25, color: Color(0xFF6D4C41),),
+                          onPressed: () {
+                            setDialogState(() {
+                              tempYear++;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 5),
+
+                    GridView.builder(
+                      shrinkWrap: true,
+                      itemCount: 12,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 6,
+                        mainAxisSpacing: 5,
+                        crossAxisSpacing: 5,
+                        childAspectRatio: 1.5,
+                      ),
+                      itemBuilder: (context, index) {
+                        final month = index + 1;
+                        final isSelected = tempMonth == month;
+
+                        return GestureDetector(
+                          onTap: () {
+                            setDialogState(() {
+                              tempMonth = month;
+                            });
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: isSelected
+                                  ? Colors.brown[600]
+                                  : Colors.brown[100],
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Text(
+                              '$month月',
+                              style: TextStyle(
+                                color: isSelected
+                                    ? Colors.white
+                                    : Color(0xFF6D4C41),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    SizedBox(
+                      width: 70,
+                      height: 30,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.brown[600],
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        onPressed: tempMonth == null
+                            ? null
+                            : () {
+                          setState(() {
+                            _selectedMonth =
+                                DateTime(tempYear, tempMonth!);
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: const Text('OK'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+
 
 
   Future<void> getFacilityId() async {
@@ -81,6 +425,9 @@ class _HistoryPageState extends State<HistoryPage> {
     _selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
     _startMonth = DateTime(DateTime.now().year, 1);
     _endMonth = DateTime(DateTime.now().year, 12);
+
+    _startYear = DateTime.now().year;
+    _endYear = DateTime.now().year;
   }
 
   @override
@@ -168,12 +515,13 @@ class _HistoryPageState extends State<HistoryPage> {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.red[900],
+              color: Colors.red,
             ),
           ),
           const SizedBox(height: 5),
 
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
 
               _buildDisplayTypeRadio(
@@ -232,7 +580,7 @@ class _HistoryPageState extends State<HistoryPage> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: _selectedDisplayType == type ? Colors.red : Colors.grey[300]!,
+            color: _selectedDisplayType == type ? Color(0xFF6D4C41) : Colors.grey[300]!,
             width: _selectedDisplayType == type ? 2 : 1,
           ),
           color: _selectedDisplayType == type ? Colors.white : Colors.white,
@@ -246,13 +594,13 @@ class _HistoryPageState extends State<HistoryPage> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: _selectedDisplayType == type ? Colors.red : Colors.grey,
+                  color: _selectedDisplayType == type ? Color(0xFF6D4C41) : Colors.grey,
                   width: 2,
                 ),
                 color: _selectedDisplayType == type ? Colors.white : Colors.white,
               ),
               child: _selectedDisplayType == type
-                  ? const Icon(Icons.circle, size: 8, color: Colors.red)
+                  ? const Icon(Icons.circle, size: 8, color:  Color(0xFF6D4C41))
                   : null,
             ),
             const SizedBox(width: 5),
@@ -302,12 +650,12 @@ class _HistoryPageState extends State<HistoryPage> {
             Container(
               padding: EdgeInsets.only(right: 9),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.red[900]!, width: 2),
+                border: Border.all(color: Colors.brown[600]!, width: 2),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Row(
                   children: [ IconButton(
-                    icon:  Icon(Icons.calendar_month, size: 28, color: Colors.red[900]),
+                    icon:  Icon(Icons.calendar_month, size: 28, color: Colors.brown[600]),
                     onPressed: () {
                       setState(() {
                         _showCalendarPanel = !_showCalendarPanel;
@@ -329,7 +677,7 @@ class _HistoryPageState extends State<HistoryPage> {
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: Colors.red[900],
+                  backgroundColor: Colors.brown[600],
                   padding: const EdgeInsets.symmetric(
                     // vertical: 1,
                     horizontal: 35,
@@ -352,7 +700,6 @@ class _HistoryPageState extends State<HistoryPage> {
           ],
         ),
 
-        // Calendar panel (shown when icon is pressed)
         if (_showCalendarPanel)
           _buildCalendarPanel(),
       ],
@@ -380,37 +727,22 @@ class _HistoryPageState extends State<HistoryPage> {
               Container(
                 padding: EdgeInsets.only(right: 50, left: 10, ),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.red[900]!, width: 2),
+                  border: Border.all(color: Colors.brown[600]!, width: 2),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Row(
-                    children: [ PopupMenuButton<String>(
-                      icon: Icon(Icons.calendar_month, size: 25, color: Colors.red[900],),
-                      onSelected: (String value) {
-                        final parts = value.split('-');
-                        setState(() {
-                          _selectedMonth = DateTime(int.parse(parts[0]), int.parse(parts[1]));
-                        });
-                      },
-                      itemBuilder: (BuildContext context) {
-                        final now = DateTime.now();
-                        final List<PopupMenuEntry<String>> items = [];
+                    children: [
+                      IconButton(
+                        icon: Icon(
+                          Icons.calendar_month,
+                          size: 30,
+                          color: Colors.brown[600],
+                        ),
+                        onPressed: () {
+                          showCustomMonthPicker(context);
+                        },
+                      ),
 
-
-                        for (int i = 11; i >= 0; i--) {
-                          final date = DateTime(now.year, now.month - i);
-                          final value = '${date.year}-${date.month}';
-                          final display = _monthFormat.format(date);
-
-                          items.add(PopupMenuItem(
-                            value: value,
-                            child: Text(display),
-                          ));
-                        }
-
-                        return items;
-                      },
-                    ),
                       SizedBox(width: 30,),
                       Text(
                         _selectedMonth != null
@@ -425,7 +757,7 @@ class _HistoryPageState extends State<HistoryPage> {
               ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: Colors.red[900],
+                    backgroundColor: Colors.brown[600],
                     padding: const EdgeInsets.symmetric(
                       // vertical: 1,
                       horizontal: 35,
@@ -453,6 +785,7 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
+
   Widget _buildMonthlyRangeSelection() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
@@ -479,14 +812,18 @@ class _HistoryPageState extends State<HistoryPage> {
                         children: [ IconButton(
                           icon: const Icon(Icons.calendar_month, size: 20),
                           onPressed: () {
+                            setState(() {
+                              showyearPicker(context);
+                            });
                           },
                         ),
                           Text(
-                            _startMonth != null
-                                ? _monthFormat.format(_startMonth!)
-                                : 'YYYY/MM',
+                            _startYear != null && _startMonthForyear != null
+                                ? '$_startYear/$_startMonthForyear'
+                                : '${DateTime.now().year}/1',
                             style: const TextStyle(fontSize: 14),
                           ),
+
                         ]
                     ),
                   ),
@@ -515,123 +852,354 @@ class _HistoryPageState extends State<HistoryPage> {
                         children: [ IconButton(
                           icon: const Icon(Icons.calendar_month, size: 20),
                           onPressed: () {
+                            showEndYearPicker(context);
                           },
                         ),
                           Text(
-                            _endMonth != null
-                                ? _monthFormat.format(_endMonth!)
-                                : 'YYYY/MM',
+                            _endYear != null && _endMonthForYear != null
+                                ? '$_endYear/$_endMonthForYear'
+                                : '${DateTime.now().year}/12',
                             style: const TextStyle(fontSize: 14),
                           ),
+
                         ]
                     ),
                   ),
+
                 ],
               ),
 
             ],
           ),
-          SizedBox(height: 20,),
-          ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.red[900],
-                padding: const EdgeInsets.symmetric(
-                  // vertical: 1,
-                  horizontal: 30,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              onPressed: () {
-                setState(() {
-                  _selectedBarIndex = -1;
-                  _showTooltip = false;
-                });
-              },
-              child: Text("検索",
-                style: TextStyle(
-                    fontSize: 14
-                ),
-              )),
+          Column(
+            children: [
+              SizedBox(height: 20,),
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.brown[600],
+                    padding: const EdgeInsets.symmetric(
+                      // vertical: 1,
+                      horizontal: 30,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _showYearMonthPicker = !_showYearMonthPicker;
+                      _selectedBarIndex = -1;
+                      _showTooltip = false;
+                    });
+                  },
+                  child: Text("検索",
+                    style: TextStyle(
+                        fontSize: 14
+                    ),
+                  )),
+            ],
+          )
         ],
       ),
     );
   }
 
+  // Widget _buildMonthlyRangeSelection() {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         // Label
+  //         const Text(
+  //           '年月選択', // နှစ်/လ ရွေးချယ်မှု
+  //           style: TextStyle(
+  //             fontSize: 14,
+  //             fontWeight: FontWeight.bold,
+  //             color: Colors.grey,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 8),
+  //
+  //         Row(
+  //           children: [
+  //             // Year & Month Dropdown Container
+  //             Container(
+  //               padding: const EdgeInsets.symmetric(horizontal: 10),
+  //               decoration: BoxDecoration(
+  //                 border: Border.all(color: Colors.brown[600]!, width: 2),
+  //                 borderRadius: BorderRadius.circular(4),
+  //               ),
+  //               child: Row(
+  //                 children: [
+  //                   const Icon(Icons.calendar_month, size: 24, color: Colors.brown),
+  //                   const SizedBox(width: 8),
+  //
+  //                   // Year Dropdown
+  //                   DropdownButton<int>(
+  //                     value: _selectedYear,
+  //                     underline: const SizedBox.shrink(), // underline ဖျက်ထားတာ
+  //                     items: List.generate(50, (index) {
+  //                       // လက်ရှိနှစ်အပေါ် အောက် ၂၅ နှစ်၊ အပေါ် ၂၅ နှစ် ပြသမယ်
+  //                       final year = DateTime.now().year - 25 + index;
+  //                       return DropdownMenuItem(
+  //                         value: year,
+  //                         child: Text('$year 年'),
+  //                       );
+  //                     }),
+  //                     onChanged: (value) {
+  //                       setState(() {
+  //                         _selectedYear = value!;
+  //                       });
+  //                     },
+  //                   ),
+  //
+  //                   const SizedBox(width: 10),
+  //
+  //                   // Month Dropdown
+  //                   DropdownButton<int>(
+  //                     value: _selectedMonthForyear,
+  //                     underline: const SizedBox.shrink(),
+  //                     items: List.generate(12, (index) {
+  //                       final month = index + 1;
+  //                       return DropdownMenuItem(
+  //                         value: month,
+  //                         child: Text('$month 月'),
+  //                       );
+  //                     }),
+  //                     onChanged: (value) {
+  //                       setState(() {
+  //                         _selectedMonthForyear = value!;
+  //                       });
+  //                     },
+  //                   ),
+  //                 ],
+  //               ),
+  //             ),
+  //
+  //             const SizedBox(width: 30),
+  //
+  //             // Search Button
+  //             ElevatedButton(
+  //                 style: ElevatedButton.styleFrom(
+  //                   foregroundColor: Colors.white,
+  //                   backgroundColor: Colors.brown[600],
+  //                   padding: const EdgeInsets.symmetric(
+  //                     horizontal: 35,
+  //                   ),
+  //                   shape: RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(10),
+  //                   ),
+  //                 ),
+  //                 onPressed: () {
+  //                   setState(() {
+  //                     _selectedBarIndex = -1;
+  //                     _showTooltip = false;
+  //                     // ဒီမှာ API Call သို့ Data Filter လုပ်တဲ့ Logic ထည့်နိုင်ပါတယ်
+  //                   });
+  //                 },
+  //                 child: const Text("検索",
+  //                   style: TextStyle(fontSize: 16),
+  //                 )),
+  //           ],
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
+
   Widget _buildCalendarPanel() {
     return Container(
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.all(12),
+      // margin: const EdgeInsets.only(top: 8),
+      // padding: const EdgeInsets.all(12),
+      width: 320,
+      height:315,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Colors.red[900]!),
+        // border: Border.all(color: Colors.red[900]!),
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.red,
-            blurRadius: 8,
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
             spreadRadius: 2,
           ),
         ],
       ),
       child: Column(
-        children: [ TableCalendar(
-          firstDay: DateTime.now().subtract(const Duration(days: 365)),
-          lastDay: DateTime.now(),
-          focusedDay: _selectedDate,
-          selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-          onDaySelected: (selectedDay, focusedDay) {
-            setState(() {
-              _selectedDate = selectedDay;
-              _showCalendarPanel = false;
-            });
-          },
-          calendarStyle: CalendarStyle(
-            selectedDecoration: BoxDecoration(
-              color: Colors.red[900],
-              shape: BoxShape.rectangle
+        mainAxisSize: MainAxisSize.min,
+        children: [ Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.5),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_month_outlined, size: 30, color: Color(0xFFB71C1C),),
+                      const Text(
+                        '日付選択',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF6D4C41),
+                        ),
+                      ),
+                    ],
+                  ),
+                  IconButton(onPressed: () {
+                    setState(() {
+                      _showCalendarPanel = false;
+                    });
+                  }, icon: Icon(Icons.close_rounded, color:Color(0xFF6D4C41),)
+                  ),
+                ],
+              ),
+              TableCalendar(
+              firstDay: DateTime.now().subtract(const Duration(days: 365)),
+              lastDay: DateTime.now(),
+              focusedDay: _selectedDate,
+              selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(() {
+                  _selectedDate = selectedDay;
+                  print('error============================');
+                  // _showCalendarPanel = false;
+                });
+              },
+              rowHeight: 30,
+              daysOfWeekVisible: false,
+              calendarStyle: CalendarStyle(
+                cellMargin: const EdgeInsets.all(1.0),
+                cellPadding: EdgeInsets.zero,
+                selectedDecoration: BoxDecoration(
+                  color: Colors.brown[600],
+                  borderRadius: BorderRadius.circular(4),
+                  shape: BoxShape.rectangle
+                ),
+                selectedTextStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                todayDecoration: BoxDecoration(
+                  color: Colors.grey,
+                  shape:  BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Color(0xFF6D4C41), width: 2 ),
+                ),
+                todayTextStyle: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+                defaultTextStyle: const TextStyle(color: Colors.black87),
+                weekendTextStyle: const TextStyle(color: Colors.redAccent),
+                outsideTextStyle: const TextStyle(color: Colors.grey),
+              ),
+              headerStyle: HeaderStyle(
+                formatButtonVisible: false,
+                headerPadding: const EdgeInsets.symmetric(vertical:0),
+                titleCentered: true,
+                leftChevronIcon: Icon(Icons.arrow_back, color: Colors.brown[600], size: 25,),
+                rightChevronIcon: Icon(Icons.arrow_forward, color: Colors.brown[600], size: 25,),
+              ),
             ),
-            selectedTextStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold
-            ),
-            todayDecoration: BoxDecoration(
-              color: Colors.grey,
-              shape:  BoxShape.rectangle,
-              border: Border.all(color: Colors.red.shade900, width: 2 ),
-            ),
-            todayTextStyle: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-            defaultTextStyle: const TextStyle(color: Colors.black87),
-            weekendTextStyle: const TextStyle(color: Colors.redAccent),
-            outsideTextStyle: const TextStyle(color: Colors.grey),
-          ),
-          headerStyle: const HeaderStyle(
-            formatButtonVisible: false,
-            titleCentered: true,
-            leftChevronIcon: Icon(Icons.arrow_circle_left_sharp, color: Colors.red, size: 35,),
-            rightChevronIcon: Icon(Icons.arrow_circle_right_sharp, color: Colors.red, size: 35,),
+    ],
           ),
         ),
-          ElevatedButton(
-              onPressed: () {},
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 15),
-                  child: Text("OK")),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red[900],
-              foregroundColor: Colors.white
+          SizedBox(
+            height: 30,
+            width: 70,
+            child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    _showCalendarPanel = false;
+                  });
+                },
+                child: Text("OK", style: TextStyle(
+                  fontSize: 14
+                ),),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.brown[600],
+                foregroundColor: Colors.white,
+                  // padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10)
+                )
+              ),
             ),
           )
     ],
       ),
     );
   }
+  Widget buildYearMonthSelector() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+
+        /// ◀ Previous Year
+        IconButton(
+          icon: const Icon(Icons.arrow_left),
+          onPressed: () {
+            setState(() {
+              _selectedYear--;
+            });
+          },
+        ),
+
+        /// Year Dropdown
+        DropdownButton<int>(
+          value: _selectedYear,
+          items: List.generate(20, (index) {
+            final year = DateTime.now().year - 10 + index;
+            return DropdownMenuItem(
+              value: year,
+              child: Text('$year 年'),
+            );
+          }),
+          onChanged: (value) {
+            setState(() {
+              _selectedYear = value!;
+            });
+          },
+        ),
+
+        const SizedBox(width: 8),
+
+        /// Month Dropdown
+        DropdownButton<int>(
+          value: _startMonthForyear,
+          items: List.generate(12, (index) {
+            final month = index + 1;
+            return DropdownMenuItem(
+              value: month,
+              child: Text('$month 月'),
+            );
+          }),
+          onChanged: (value) {
+            setState(() {
+              _selectedMonth = value! as DateTime?;
+            });
+          },
+        ),
+
+        /// ▶ Next Year
+        IconButton(
+          icon: const Icon(Icons.arrow_right),
+          onPressed: () {
+            setState(() {
+              _selectedYear++;
+            });
+          },
+        ),
+      ],
+    );
+  }
+
 
   Widget _buildSearchButton() {
     return Padding(
@@ -887,3 +1455,4 @@ class _HistoryPageState extends State<HistoryPage> {
 bool isSameDay(DateTime a, DateTime b) {
   return a.year == b.year && a.month == b.month && a.day == b.day;
 }
+
