@@ -1,11 +1,11 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:ntt/core/route/app_route.dart';
 import 'package:ntt/core/theme/app_theme.dart';
+import 'package:ntt/feature/history/controllers/history_controller.dart';
 import 'package:ntt/feature/history/history_index.dart';
 import 'package:ntt/feature/consumption/consumption_index.dart';
 import 'package:ntt/feature/facility_search/pages/facility_search.dart';
+import 'package:provider/provider.dart';
 
 import 'mock/history_mock_data.dart';
 
@@ -36,34 +36,43 @@ class MyApp extends StatelessWidget {
             final facilityId = args['facilityId'] ?? 'F001';
 
             return MaterialPageRoute(
-              builder: (_) => HistoryPage(
-                facilityName: facilityName,
-                facilityId: facilityId,
-                initialHourlyData: getMockHourlyData(),
-                initialDailyData: getMockDailyData(),
-                initialMonthlyData: getMockMonthlyData(),
+              builder: (_) => ChangeNotifierProvider(
+                create: (_) => HistoryProvider()..init(),
+                child : HistoryPage(
+                  facilityName: facilityName,
+                  facilityId: facilityId,
+                  initialHourlyData: getMockHourlyData(),
+                  initialDailyData: getMockDailyData(),
+                  initialMonthlyData: getMockMonthlyData(),
+                ),
               ),
             );
           } else if (args is List<PowerHistoryData>) {
             // Old way: Just data list (for backward compatibility)
             return MaterialPageRoute(
-              builder: (_) => HistoryPage(
-                facilityName: 'Power history',
-                facilityId: 'HIST001',
-                initialHourlyData: args, // Use the passed data
-                initialDailyData: getMockDailyData(),
-                initialMonthlyData: getMockMonthlyData(),
+              builder: (_) => ChangeNotifierProvider(
+                create: (_) => HistoryProvider()..init(),
+                child: HistoryPage(
+                  facilityName: 'Power history',
+                  facilityId: 'HIST001',
+                  initialHourlyData: args, // Use the passed data
+                  initialDailyData: getMockDailyData(),
+                  initialMonthlyData: getMockMonthlyData(),
+                ),
               ),
             );
           } else {
             // Default if no arguments
             return MaterialPageRoute(
-              builder: (_) => HistoryPage(
-                facilityName: 'Demo FacilitySearch',
-                facilityId: 'DEMO001',
-                initialHourlyData: getMockHourlyData(),
-                initialDailyData: getMockDailyData(),
-                initialMonthlyData: getMockMonthlyData(),
+              builder: (_) => ChangeNotifierProvider(
+                create: (_) => HistoryProvider()..init(),
+                child: HistoryPage(
+                  facilityName: 'Demo FacilitySearch',
+                  facilityId: 'DEMO001',
+                  initialHourlyData: getMockHourlyData(),
+                  initialDailyData: getMockDailyData(),
+                  initialMonthlyData: getMockMonthlyData(),
+                ),
               ),
             );
           }

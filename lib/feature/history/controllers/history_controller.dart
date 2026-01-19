@@ -1,51 +1,93 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:ntt/feature/history/history_index.dart';
+import 'package:ntt/feature/history/services/history_service.dart';
 import 'package:ntt/mock/history_mock_data.dart';
-import '../services/history_service.dart';
 
-enum DisplayType { hourly, daily, monthly }
+class HistoryProvider extends ChangeNotifier{
+  final HistoryService  _historyService = HistoryService();
 
-class HistoryController extends ChangeNotifier {
-  final HistoryService service;
+  List<PowerHistoryData> _currentData = [];
+  DisplayType _selectedDisplayType = DisplayType.hourly;
+  DateTime _selectedDate = DateTime.now();
+  DateTime? _selectedMonth;
 
-  HistoryController(this.service) {
-    loadHourly();
+  bool _showCalendarPanel = false;
+  int _startYear = DateTime.now().year;
+  int _endYear = DateTime.now().year;
+  int _startMonthForYear = DateTime.now().month;
+  int? _endMonthForYear;
+
+  int _selectedBarIndex = -1;
+
+  List<PowerHistoryData> get currentData  => _currentData;
+  DisplayType get selectedDisplayType  => _selectedDisplayType;
+  DateTime get selectedDate => _selectedDate;
+  DateTime? get selectedMonth => _selectedMonth;
+  bool get showCalendarPanel => _showCalendarPanel;
+  int get selectedBarIndex => _selectedBarIndex;
+  int get startYear => _startYear;
+  int get endYear => _endYear;
+  int get startMonthForYear => _startMonthForYear;
+  int? get endMonthForYear => _endMonthForYear;
+
+  Future<void> init() async {
+    _selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
+    await loadData();
   }
 
-  DisplayType displayType = DisplayType.hourly;
-  List<PowerHistoryData> data = [];
+  Future<void> loadData() async {
+    switch (_selectedDisplayType) {
+      case DisplayType.hourly:
+        _currentData = await _historyService.getHourlyData();
+        break;
+      case DisplayType.daily:
+        _currentData = await _historyService.getDailyData();
+        break;
+      case DisplayType.monthly:
+        _currentData = await _historyService.getMonthlyData();
+        break;
+    }
+    notifyListeners();
+  }
+  void setDisplayType (DisplayType type) {
+    _selectedDisplayType = type;
+    _selectedBarIndex = -1;
+    loadData();
+  }
 
-  DateTime selectedDate = DateTime.now();
-  DateTime selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
-
-  int selectedBarIndex = -1;
-
-  void loadHourly() {
-    displayType = DisplayType.hourly;
-    data = service.getHourly();
+  void setDate(DateTime date) {
+    _selectedDate = date;
     notifyListeners();
   }
 
-  void loadDaily() {
-    displayType = DisplayType.daily;
-    data = service.getDaily();
+  void toggleCalendarPanel() {
+    _showCalendarPanel = !_showCalendarPanel;
     notifyListeners();
   }
 
-  void loadMonthly() {
-    displayType = DisplayType.monthly;
-    data = service.getMonthly();
+  void closeCalendarPanel() {
+    _showCalendarPanel = false;
+    notifyListeners();
+  }
+  void updateYearRang({int? startMonth, int? endMonth}) {
+    if(startMonth != null) _startMonthForYear = startMonth;
+    if(endMonth != null) _endMonthForYear = endMonth;
     notifyListeners();
   }
 
-  void selectBar(int index) {
-    selectedBarIndex = index;
+  void selectBar (int index) {
+    _selectedBarIndex = index;
     notifyListeners();
   }
 
-  double get maxValue {
-    if (data.isEmpty) return 50;
-    return data
-        .expand((e) => [e.generatedEnergy, e.selfConsumption, e.powerUsage])
-        .reduce((a, b) => a > b ? a : b);
+  double getMaxValue() {
+    if (_currentData.isEmpty) return 50.0;
+    double max = 0;
+    for (var item in _currentData) {
+      max = [max, item.generatedEnergy, item.selfConsumption, item.powerUsage]
+          .reduce((a,b) => a > b ? a : b);
+    }
+    return max;
   }
+
 }

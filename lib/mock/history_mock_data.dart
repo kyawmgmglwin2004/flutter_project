@@ -25,6 +25,7 @@
 // }
 
 // PowerHistoryData Model Class
+enum DisplayType { hourly, daily, monthly }
 class PowerHistoryData {
   final String label;
   final double generatedEnergy;
@@ -37,6 +38,7 @@ class PowerHistoryData {
     required this.selfConsumption,
     required this.powerUsage,
   });
+
 
   @override
   String toString() {
