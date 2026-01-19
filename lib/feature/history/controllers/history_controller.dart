@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:ntt/feature/history/history_index.dart';
 import 'package:ntt/feature/history/services/history_service.dart';
-import 'package:ntt/mock/history_mock_data.dart';
+import 'package:ntt/mock/history_mock_data.dart' hide DisplayType;
 
 class HistoryProvider extends ChangeNotifier{
   final HistoryService  _historyService = HistoryService();
