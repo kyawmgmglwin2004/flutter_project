@@ -17,7 +17,10 @@ class InfoBox extends StatelessWidget {
         Container(
           height: 60,
           alignment: Alignment.center,
-          color: Colors.grey[500],
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.90),
+
+          ),
           child: Text(
             title,
             textAlign: TextAlign.center,
@@ -27,10 +30,13 @@ class InfoBox extends StatelessWidget {
             ),
           ),
         ),
+        // const SizedBox(height: 8),
         Container(
           height: 70,
           alignment: Alignment.center,
-          color: Colors.grey[100],
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.80),
+          ),
           child: Text(
             value,
             style: const TextStyle(

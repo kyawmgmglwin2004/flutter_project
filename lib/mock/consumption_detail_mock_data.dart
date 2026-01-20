@@ -14,6 +14,7 @@ List<ConsumptionData> getMockData() {
       todayTotalGeneration: 0.789,
       todayTotalSelfConsumption: 1.78,
       todayTotalPowerUsage: 2.7,
+      imagePath: "assets/images/image.png"
     ),
     ConsumptionData(
       facilityId: "112233",
@@ -27,6 +28,7 @@ List<ConsumptionData> getMockData() {
       todayTotalGeneration: 5.430,
       todayTotalSelfConsumption: 4.100,
       todayTotalPowerUsage: 6.200,
+        imagePath: "assets/images/image (5).png"
     ),
     ConsumptionData(
       facilityId: "123456",
@@ -40,6 +42,7 @@ List<ConsumptionData> getMockData() {
       todayTotalGeneration: 15.234,
       todayTotalSelfConsumption: 12.560,
       todayTotalPowerUsage: 18.900,
+        imagePath: "assets/images/image (7).png"
     ),
   ];
 }

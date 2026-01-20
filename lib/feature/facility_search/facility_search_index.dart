@@ -1,1 +1,1 @@
-export 'package:ntt/feature/facility_search/pages/facility_search.dart';
+export './pages/facility_search.dart';

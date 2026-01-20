@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:ntt/feature/history/history_index.dart';
-import 'package:ntt/feature/history/services/history_service.dart';
-import 'package:ntt/mock/history_mock_data.dart' hide DisplayType;
+
+import '../../../mock/history_mock_data.dart';
+import '../services/history_service.dart';
 
 class HistoryProvider extends ChangeNotifier{
   final HistoryService  _historyService = HistoryService();
@@ -35,10 +35,19 @@ class HistoryProvider extends ChangeNotifier{
     await loadData();
   }
 
+
+  void setSelectedMonth(DateTime month) {
+    _selectedMonth = month;
+    notifyListeners();
+  }
+
+
   Future<void> loadData() async {
     switch (_selectedDisplayType) {
       case DisplayType.hourly:
+
         _currentData = await _historyService.getHourlyData();
+        print('print====================$currentData');
         break;
       case DisplayType.daily:
         _currentData = await _historyService.getDailyData();
@@ -50,12 +59,14 @@ class HistoryProvider extends ChangeNotifier{
     notifyListeners();
   }
   void setDisplayType (DisplayType type) {
+    print('=============================================$type');
     _selectedDisplayType = type;
     _selectedBarIndex = -1;
+    notifyListeners();
     loadData();
   }
 
-  void setDate(DateTime date) {
+  void setDate(DateTime date, DateTime focusedDay) {
     _selectedDate = date;
     notifyListeners();
   }
@@ -73,6 +84,20 @@ class HistoryProvider extends ChangeNotifier{
     if(startMonth != null) _startMonthForYear = startMonth;
     if(endMonth != null) _endMonthForYear = endMonth;
     notifyListeners();
+  }
+
+
+  void setStartYear(int year) {
+    if (_startYear != year) {
+      _startYear = year;
+      notifyListeners();
+    }
+  }
+  void setEndYear(int year) {
+    if (_startYear != year) {
+      _startYear = year;
+      notifyListeners();
+    }
   }
 
   void selectBar (int index) {

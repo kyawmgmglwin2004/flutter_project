@@ -1,1 +1,1 @@
-export 'package:ntt/feature/history/pages/history_page.dart';
+export '../history/pages/history_page.dart';

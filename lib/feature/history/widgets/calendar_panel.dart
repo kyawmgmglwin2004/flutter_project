@@ -38,7 +38,7 @@ class CalendarPanel extends StatelessWidget {
                     Row(
                       children: const [
                         Icon(Icons.calendar_month_outlined,
-                            size: 30, color: Color(0xFFB71C1C)),
+                            size: 30, color: Color(0xFF6D4C41)),
                         SizedBox(width: 6),
                         Text(
                           '日付選択',
@@ -59,8 +59,6 @@ class CalendarPanel extends StatelessWidget {
                     ),
                   ],
                 ),
-
-
                 TableCalendar(
                   firstDay:
                   DateTime.now().subtract(const Duration(days: 365)),
@@ -69,15 +67,16 @@ class CalendarPanel extends StatelessWidget {
                   selectedDayPredicate: (day) =>
                       isSameDay(day, provider.selectedDate),
                   onDaySelected: (selectedDay, focusedDay) {
-                    provider.setDate(selectedDay);
+                    provider.setDate(selectedDay, focusedDay);
                   },
                   rowHeight: 30,
                   daysOfWeekVisible: false,
                   calendarStyle: CalendarStyle(
                     cellMargin: const EdgeInsets.all(1),
                     selectedDecoration: BoxDecoration(
+                      shape: BoxShape.rectangle,
                       color: Colors.brown[600],
-                      borderRadius: BorderRadius.circular(4),
+
                     ),
                     selectedTextStyle: const TextStyle(
                       color: Colors.white,
@@ -86,7 +85,8 @@ class CalendarPanel extends StatelessWidget {
                     ),
                     todayDecoration: BoxDecoration(
                       color: Colors.grey,
-                      borderRadius: BorderRadius.circular(4),
+                      shape: BoxShape.rectangle,
+
                       border: Border.all(
                           color: const Color(0xFF6D4C41), width: 2),
                     ),

@@ -1,0 +1,53 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:ntt/feature/history/controllers/history_controller.dart';
+import 'package:ntt/feature/history/widgets/radio_buttom.dart';
+import 'package:provider/provider.dart';
+
+import '../../../mock/history_mock_data.dart';
+Widget buildDisplayTypeSection(BuildContext context) {
+  final provider = context.watch<HistoryProvider>();
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        Text(
+          '表示種別',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: Colors.red,
+          ),
+        ),
+        const SizedBox(height: 5),
+
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+
+            DisplayTypeRadio(
+              type: DisplayType.hourly,
+              label: '時間帯別',
+            ),
+            const SizedBox(width: 5 ),
+
+
+            DisplayTypeRadio(
+              type: DisplayType.daily,
+              label: '日別',
+            ),
+            const SizedBox(width: 12),
+
+
+            DisplayTypeRadio(
+              type: DisplayType.monthly,
+              label: '月別',
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}

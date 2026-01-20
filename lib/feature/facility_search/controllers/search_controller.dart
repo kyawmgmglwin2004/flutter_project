@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ntt/core/route/app_route.dart';
-import 'package:ntt/feature/facility_search/services/facility_service.dart';
-import 'package:ntt/feature/facility_search/widgets/error_dialog.dart';
-import 'package:ntt/mock/consumption_mock_data.dart';
+import '../../../core/route/app_route.dart';
+import '../../../mock/consumption_mock_data.dart';
+import '../../consumption/models/consumption_args.dart';
+import '../services/facility_service.dart';
+import '../widgets/error_dialog.dart';
 
 class FacilitySearchController extends ChangeNotifier {
   final TextEditingController facilityController = TextEditingController();
@@ -12,7 +13,7 @@ class FacilitySearchController extends ChangeNotifier {
 
   bool isLoading = false;
 
-  Future<void> search(BuildContext context) async{
+  Future<void> search(BuildContext context) async {
     if (isLoading) return;
 
     isLoading = true;
@@ -24,15 +25,20 @@ class FacilitySearchController extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
 
-    if(result == null){
+    if (result == null) {
       showErrorDialog(context);
-    }else {
+    } else {
       await storage.write(key: 'facilityId', value: id);
-      Navigator.pushReplacementNamed(context, AppRoute.consumption, arguments: id);
+      Navigator.pushReplacementNamed(
+        context,
+        AppRoute.consumption,
+          arguments: ConsumptionArgs(facilityId: id, data: result)
+      );
     }
   }
+
   @override
-  void disponse(){
+  void dispose() {
     facilityController.dispose();
     super.dispose();
   }

@@ -1,11 +1,12 @@
-
 import '../../../mock/consumption_mock_data.dart';
 import '../services/consumption_service.dart';
 
 class ConsumptionController {
-  final ConsumptionService service = ConsumptionService();
+  final ConsumptionService service;
 
-  ConsumptionData? loadConsumption(String facilityId) {
+  ConsumptionController({required this.service});
+
+  Future<ConsumptionData?> loadConsumption(String facilityId) {
     return service.getByFacilityId(facilityId);
   }
 }

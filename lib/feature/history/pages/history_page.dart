@@ -1,15 +1,20 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:ntt/core/route/app_route.dart';
-import 'package:ntt/feature/history/controllers/history_controller.dart';
-import 'package:ntt/feature/history/widgets/calendar_panel.dart';
-import 'package:ntt/mock/history_mock_data.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-enum DisplayType { hourly, daily, monthly }
+import '../../../core/route/app_route.dart';
+import '../../../mock/history_mock_data.dart';
+import '../controllers/history_controller.dart';
+import '../widgets/calendar_panel.dart';
+import '../widgets/date_selection.dart';
+import '../widgets/day_picker.dart';
+import '../widgets/display_type.dart';
+import '../widgets/month_picker.dart';
+import '../widgets/year_picker.dart';
+
 
 class HistoryPage extends StatefulWidget {
   final String facilityName;
@@ -34,7 +39,7 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPageState extends State<HistoryPage> {
   late List<PowerHistoryData> _currentData;
-  DisplayType _selectedDisplayType = DisplayType.hourly;
+  // DisplayType _selectedDisplayType = DisplayType.hourly;
   DateTime _selectedDate = DateTime.now();
   DateTime? _selectedMonth;
   DateTime? _startMonth;
@@ -50,351 +55,11 @@ class _HistoryPageState extends State<HistoryPage> {
   int? _startYear;
   int? _endYear;
 
-
-
-
-
-  final DateFormat _dateFormat = DateFormat('yyyy/MM/dd');
+ final DateFormat _dateFormat = DateFormat('yyyy/MM/dd');
   final DateFormat _monthFormat = DateFormat('yyyy/MM');
 
 
   final FlutterSecureStorage storage = FlutterSecureStorage();
-
-  Future<void> showyearPicker(BuildContext context) async {
-    // Create temporary variables for the dialog state
-    int tempYear = _startYear ?? DateTime.now().year;
-    int tempMonth = _startMonthForyear;
-
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return Dialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Year Dropdown
-                        Row(
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.arrow_left),
-                              onPressed: () {
-                                setState(() {
-                                  _selectedYear--;
-                                });
-                              },
-                            ),
-                            DropdownButton<int>(
-                              value: tempYear,
-                              items: List.generate(10, (index) {
-                                final year = DateTime.now().year - 7 + index;
-                                return DropdownMenuItem(value: year, child: Text('$year'));
-                              }),
-                              onChanged: (value) {
-                                setDialogState(() {
-                                  tempYear = value!;
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            Text("年", style: TextStyle(color: Colors.grey[700])),
-                          ],
-                        ),
-                        // Month Dropdown
-                        Row(
-                          children: [
-
-                            DropdownButton<int>(
-                              value: tempMonth,
-                              items: List.generate(1, (index) {
-                                final month = index + 1;
-                                return DropdownMenuItem(
-                                  value: month,
-                                  child: Text('$month'),
-                                );
-                              }),
-                              onChanged: (value) {
-                                setDialogState(() {
-                                  tempMonth = value!;
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            Text("月", style: TextStyle(color: Colors.grey[700])),
-                            IconButton(
-                              icon: const Icon(Icons.arrow_right),
-                              onPressed: () {
-                                setState(() {
-                                  _selectedYear++;
-                                });
-                              },
-                            ),
-
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-
-  Future<void> showEndYearPicker(BuildContext context) async {
-    // Handle nulls safely
-    int tempYear = _endYear ?? DateTime.now().year;
-    int tempMonth = _endMonthForYear ?? 12;
-
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return Dialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Year Dropdown
-                        Row(
-                          children: [
-                            DropdownButton<int>(
-                              value: tempYear,
-                              items: List.generate(10, (index) {
-                                final year = DateTime.now().year - 7 + index;
-                                return DropdownMenuItem(value: year, child: Text('$year'));
-                              }),
-                              onChanged: (value) {
-                                setDialogState(() {
-                                  tempYear = value!;
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            Text("年", style: TextStyle(color: Colors.grey[700])),
-                          ],
-                        ),
-                        // Month Dropdown
-                        Row(
-                          children: [
-                            DropdownButton<int>(
-                              value: tempMonth,
-                              // FIX: Generate 12 months instead of 1
-                              items: List.generate(12, (index) {
-                                final month = index + 1;
-                                return DropdownMenuItem(
-                                  value: month,
-                                  child: Text('$month'),
-                                );
-                              }),
-                              onChanged: (value) {
-                                setDialogState(() {
-                                  tempMonth = value!;
-                                });
-                              },
-                            ),
-                            const SizedBox(width: 10),
-                            Text("月", style: TextStyle(color: Colors.grey[700])),
-                          ],
-                        ),
-                        IconButton(
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(Icons.close),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          _endYear = tempYear;
-                          _endMonthForYear = tempMonth;
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: const Text("OK"),
-                    )
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-
-  Future<void> showCustomMonthPicker(BuildContext context) async {
-    int tempYear = _selectedMonth?.year ?? DateTime.now().year;
-    int? tempMonth = _selectedMonth?.month;
-
-    await showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setDialogState) {
-            return Dialog(
-              backgroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(Icons.calendar_month, color: Colors.brown , size: 40,),
-                        const SizedBox(width: 8),
-                        const Text(
-                          '月を選択',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: Color(0xFF6D4C41)
-                          ),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Color(0xFF6D4C41), size: 35,),
-                          onPressed: () => Navigator.pop(context),
-                        )
-                      ],
-                    ),
-
-                    const SizedBox(height: 2),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.arrow_back_sharp, fontWeight: FontWeight.bold, size: 25, color: Color(0xFF6D4C41),),
-                          onPressed: () {
-                            setDialogState(() {
-                              tempYear--;
-                            });
-                          },
-                        ),
-                        Text(
-                          '$tempYear',
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF6D4C41)
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.arrow_forward_sharp, fontWeight: FontWeight.bold, size: 25, color: Color(0xFF6D4C41),),
-                          onPressed: () {
-                            setDialogState(() {
-                              tempYear++;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 5),
-
-                    GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: 12,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 6,
-                        mainAxisSpacing: 5,
-                        crossAxisSpacing: 5,
-                        childAspectRatio: 1.5,
-                      ),
-                      itemBuilder: (context, index) {
-                        final month = index + 1;
-                        final isSelected = tempMonth == month;
-
-                        return GestureDetector(
-                          onTap: () {
-                            setDialogState(() {
-                              tempMonth = month;
-                            });
-                          },
-                          child: Container(
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? Colors.brown[600]
-                                  : Colors.brown[100],
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            child: Text(
-                              '$month月',
-                              style: TextStyle(
-                                color: isSelected
-                                    ? Colors.white
-                                    : Color(0xFF6D4C41),
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    SizedBox(
-                      width: 70,
-                      height: 30,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.brown[600],
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                        ),
-                        onPressed: tempMonth == null
-                            ? null
-                            : () {
-                          setState(() {
-                            _selectedMonth =
-                                DateTime(tempYear, tempMonth!);
-                          });
-                          Navigator.pop(context);
-                        },
-                        child: const Text('OK'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-
-
 
   Future<void> getFacilityId() async {
     try {
@@ -437,802 +102,59 @@ class _HistoryPageState extends State<HistoryPage> {
   Widget build(BuildContext context) {
     final provider = context.watch<HistoryProvider>();
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(15),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text("施設名_電力量履歴",
-                    style:TextStyle(
-                        color: Colors.blue[500],
-                        fontWeight: FontWeight.bold,
-                        fontSize: 17
-                    ),),
-                  Text("電力量履歴",
-                    style: TextStyle(
-                        color: Colors.blue[500]
-                    ),)
-                ],
-              ),
-              _buildDisplayTypeSection(),
-
-              _buildDateSelectionSection(),
-
-
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: _buildGraphArea(),
-                ),
-              ),
-
-              _buildLegend(),
-
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.blue[50],
-        border: Border(bottom: BorderSide(color: Colors.grey[300]!)),
-      ),
-      child: Row(
+      body: Stack(
         children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Navigator.pop(context),
-          ),
-          Expanded(
-            child: Text(
-              '${widget.facilityName} - Electricity Usage history',
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDisplayTypeSection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Item #2: Display type label
-          Text(
-            '表示種別',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.red,
-            ),
-          ),
-          const SizedBox(height: 5),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-
-              _buildDisplayTypeRadio(
-                type: DisplayType.hourly,
-                label: '時間帯別',
-              ),
-              const SizedBox(width: 5 ),
-
-
-              _buildDisplayTypeRadio(
-                type: DisplayType.daily,
-                label: '日別',
-              ),
-              const SizedBox(width: 12),
-
-
-              _buildDisplayTypeRadio(
-                type: DisplayType.monthly,
-                label: '月別',
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDisplayTypeRadio({
-    required DisplayType type,
-    required String label,
-
-  }) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedDisplayType = type;
-          _selectedBarIndex = -1;
-          _showTooltip = false;
-          switch (type) {
-            case DisplayType.hourly:
-              _currentData = widget.initialHourlyData;
-              break;
-            case DisplayType.daily:
-              _currentData = widget.initialDailyData;
-              break;
-            case DisplayType.monthly:
-              _currentData = widget.initialMonthlyData;
-              break;
-          }
-        });
-      },
-      child: Container(
-        height: 30,
-        width: 110,
-        padding: const EdgeInsets.only(left: 8),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: _selectedDisplayType == type ? Color(0xFF6D4C41) : Colors.grey[300]!,
-            width: _selectedDisplayType == type ? 2 : 1,
-          ),
-          color: _selectedDisplayType == type ? Colors.white : Colors.white,
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: _selectedDisplayType == type ? Color(0xFF6D4C41) : Colors.grey,
-                  width: 2,
+          SafeArea(
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text("施設名_電力量履歴",
+                      style:TextStyle(
+                          color: Colors.blue[500],
+                          fontWeight: FontWeight.bold,
+                          fontSize: 17
+                      ),),
+                    Text("電力量履歴",
+                      style: TextStyle(
+                          color: Colors.blue[500]
+                      ),)
+                  ],
                 ),
-                color: _selectedDisplayType == type ? Colors.white : Colors.white,
-              ),
-              child: _selectedDisplayType == type
-                  ? const Icon(Icons.circle, size: 8, color:  Color(0xFF6D4C41))
-                  : null,
+                buildDisplayTypeSection(context),
+
+                buildDateSelectionSection(context),
+
+
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: _buildGraphArea(context)
+                  ),
+                ),
+
+                _buildLegend(),
+
+              ],
             ),
-            const SizedBox(width: 5),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: _selectedDisplayType == type
-                    ? FontWeight.bold
-                    : FontWeight.normal,
-                color: _selectedDisplayType == type ? Colors.red : Colors.grey[700],
-              ),
-            ),
-          ],
+          ),
         ),
+          if (provider.showCalendarPanel)
+            Center(
+              child: CalendarPanel(),
+            ),
+    ]
       ),
     );
   }
 
-  Widget _buildDateSelectionSection() {
-    if (_selectedDisplayType == DisplayType.hourly) {
-      return _buildHourlyDateSelection();
-    } else if (_selectedDisplayType == DisplayType.daily) {
-      return _buildMonthlySelection();
-    } else {
-      return _buildMonthlyRangeSelection();
-    }
-  }
-
-  Widget _buildHourlyDateSelection() {
+  Widget _buildGraphArea(BuildContext context) {
     final provider = context.watch<HistoryProvider>();
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          '日付選択',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.grey,
-          ),
-        ),
-        const SizedBox(height: 8),
-
-        Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(right: 9),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.brown, width: 2),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.calendar_month,
-                        size: 28, color: Colors.brown[600]),
-                    onPressed: () {
-                      provider.toggleCalendarPanel();
-                    },
-                  ),
-                  Text(
-                    _dateFormat.format(provider.selectedDate),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 30),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _selectedBarIndex = -1;
-                  _showTooltip = false;
-                });
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.brown[600],
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(horizontal: 35),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: const Text("検索", style: TextStyle(fontSize: 16)),
-            ),
-          ],
-        ),
-        if (provider.showCalendarPanel)
-          Center(
-            child: CalendarPanel(),
-          ),
-      ],
-    );
-  }
-
-
-  Widget _buildMonthlySelection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            '月選択',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 8),
-
-          Row(
-            children: [
-              Container(
-                padding: EdgeInsets.only(right: 50, left: 10, ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.brown[600]!, width: 2),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.calendar_month,
-                          size: 30,
-                          color: Colors.brown[600],
-                        ),
-                        onPressed: () {
-                          showCustomMonthPicker(context);
-                        },
-                      ),
-
-                      SizedBox(width: 30,),
-                      Text(
-                        _selectedMonth != null
-                            ? _monthFormat.format(_selectedMonth!)
-                            : 'Select month',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blue),
-                      ),
-                    ]
-                ),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.brown[600],
-                    padding: const EdgeInsets.symmetric(
-                      // vertical: 1,
-                      horizontal: 35,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _selectedBarIndex = -1;
-                      _showTooltip = false;
-                    });
-                  },
-                  child: Text("検索",
-                    style: TextStyle(
-                        fontSize: 16
-                    ),
-                  )),
-
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-
-  Widget _buildMonthlyRangeSelection() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Column(
-                children: [
-                  Text("開始日", style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16
-                  ),),
-                  Container(
-                    height: 40,
-                    padding: EdgeInsets.only(right: 20,),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey!, width: 2),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                        children: [ IconButton(
-                          icon: const Icon(Icons.calendar_month, size: 20),
-                          onPressed: () {
-                            setState(() {
-                              showyearPicker(context);
-                            });
-                          },
-                        ),
-                          Text(
-                            _startYear != null && _startMonthForyear != null
-                                ? '$_startYear/$_startMonthForyear'
-                                : '${DateTime.now().year}/1',
-                            style: const TextStyle(fontSize: 14),
-                          ),
-
-                        ]
-                    ),
-                  ),
-                ],
-              ),
-
-            ],
-          ),
-          Row(
-            children: [
-              Column(
-                children: [
-                  Text("開始日", style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16
-                  ),),
-                  Container(
-                    height: 40,
-                    padding: EdgeInsets.only(right: 20,),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey!, width: 2),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                        children: [ IconButton(
-                          icon: const Icon(Icons.calendar_month, size: 20),
-                          onPressed: () {
-                            showEndYearPicker(context);
-                          },
-                        ),
-                          Text(
-                            _endYear != null && _endMonthForYear != null
-                                ? '$_endYear/$_endMonthForYear'
-                                : '${DateTime.now().year}/12',
-                            style: const TextStyle(fontSize: 14),
-                          ),
-
-                        ]
-                    ),
-                  ),
-
-                ],
-              ),
-
-            ],
-          ),
-          Column(
-            children: [
-              SizedBox(height: 20,),
-              ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.brown[600],
-                    padding: const EdgeInsets.symmetric(
-                      // vertical: 1,
-                      horizontal: 30,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _showYearMonthPicker = !_showYearMonthPicker;
-                      _selectedBarIndex = -1;
-                      _showTooltip = false;
-                    });
-                  },
-                  child: Text("検索",
-                    style: TextStyle(
-                        fontSize: 14
-                    ),
-                  )),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  // Widget _buildMonthlyRangeSelection() {
-  //   return Padding(
-  //     padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         // Label
-  //         const Text(
-  //           '年月選択', // နှစ်/လ ရွေးချယ်မှု
-  //           style: TextStyle(
-  //             fontSize: 14,
-  //             fontWeight: FontWeight.bold,
-  //             color: Colors.grey,
-  //           ),
-  //         ),
-  //         const SizedBox(height: 8),
-  //
-  //         Row(
-  //           children: [
-  //             // Year & Month Dropdown Container
-  //             Container(
-  //               padding: const EdgeInsets.symmetric(horizontal: 10),
-  //               decoration: BoxDecoration(
-  //                 border: Border.all(color: Colors.brown[600]!, width: 2),
-  //                 borderRadius: BorderRadius.circular(4),
-  //               ),
-  //               child: Row(
-  //                 children: [
-  //                   const Icon(Icons.calendar_month, size: 24, color: Colors.brown),
-  //                   const SizedBox(width: 8),
-  //
-  //                   // Year Dropdown
-  //                   DropdownButton<int>(
-  //                     value: _selectedYear,
-  //                     underline: const SizedBox.shrink(), // underline ဖျက်ထားတာ
-  //                     items: List.generate(50, (index) {
-  //                       // လက်ရှိနှစ်အပေါ် အောက် ၂၅ နှစ်၊ အပေါ် ၂၅ နှစ် ပြသမယ်
-  //                       final year = DateTime.now().year - 25 + index;
-  //                       return DropdownMenuItem(
-  //                         value: year,
-  //                         child: Text('$year 年'),
-  //                       );
-  //                     }),
-  //                     onChanged: (value) {
-  //                       setState(() {
-  //                         _selectedYear = value!;
-  //                       });
-  //                     },
-  //                   ),
-  //
-  //                   const SizedBox(width: 10),
-  //
-  //                   // Month Dropdown
-  //                   DropdownButton<int>(
-  //                     value: _selectedMonthForyear,
-  //                     underline: const SizedBox.shrink(),
-  //                     items: List.generate(12, (index) {
-  //                       final month = index + 1;
-  //                       return DropdownMenuItem(
-  //                         value: month,
-  //                         child: Text('$month 月'),
-  //                       );
-  //                     }),
-  //                     onChanged: (value) {
-  //                       setState(() {
-  //                         _selectedMonthForyear = value!;
-  //                       });
-  //                     },
-  //                   ),
-  //                 ],
-  //               ),
-  //             ),
-  //
-  //             const SizedBox(width: 30),
-  //
-  //             // Search Button
-  //             ElevatedButton(
-  //                 style: ElevatedButton.styleFrom(
-  //                   foregroundColor: Colors.white,
-  //                   backgroundColor: Colors.brown[600],
-  //                   padding: const EdgeInsets.symmetric(
-  //                     horizontal: 35,
-  //                   ),
-  //                   shape: RoundedRectangleBorder(
-  //                     borderRadius: BorderRadius.circular(10),
-  //                   ),
-  //                 ),
-  //                 onPressed: () {
-  //                   setState(() {
-  //                     _selectedBarIndex = -1;
-  //                     _showTooltip = false;
-  //                     // ဒီမှာ API Call သို့ Data Filter လုပ်တဲ့ Logic ထည့်နိုင်ပါတယ်
-  //                   });
-  //                 },
-  //                 child: const Text("検索",
-  //                   style: TextStyle(fontSize: 16),
-  //                 )),
-  //           ],
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildCalendarPanel() {
-  //   return Container(
-  //     // margin: const EdgeInsets.only(top: 8),
-  //     // padding: const EdgeInsets.all(12),
-  //     width: 320,
-  //     height:315,
-  //     decoration: BoxDecoration(
-  //       color: Colors.white,
-  //       // border: Border.all(color: Colors.red[900]!),
-  //       borderRadius: BorderRadius.circular(8),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.black.withOpacity(0.1),
-  //           blurRadius: 10,
-  //           offset: const Offset(0, 4),
-  //           spreadRadius: 2,
-  //         ),
-  //       ],
-  //     ),
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.min,
-  //       children: [ Padding(
-  //         padding: const EdgeInsets.symmetric(horizontal: 20.5),
-  //         child: Column(
-  //           children: [
-  //             Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Row(
-  //                   children: [
-  //                     const Icon(Icons.calendar_month_outlined, size: 30, color: Color(0xFFB71C1C),),
-  //                     const Text(
-  //                       '日付選択',
-  //                       style: TextStyle(
-  //                         fontSize: 14,
-  //                         fontWeight: FontWeight.bold,
-  //                         color: Color(0xFF6D4C41),
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 IconButton(onPressed: () {
-  //                   setState(() {
-  //                     _showCalendarPanel = false;
-  //                   });
-  //                 }, icon: Icon(Icons.close_rounded, color:Color(0xFF6D4C41),)
-  //                 ),
-  //               ],
-  //             ),
-  //             TableCalendar(
-  //             firstDay: DateTime.now().subtract(const Duration(days: 365)),
-  //             lastDay: DateTime.now(),
-  //             focusedDay: _selectedDate,
-  //             selectedDayPredicate: (day) => isSameDay(day, _selectedDate),
-  //             onDaySelected: (selectedDay, focusedDay) {
-  //               setState(() {
-  //                 _selectedDate = selectedDay;
-  //                 print('error============================');
-  //                 // _showCalendarPanel = false;
-  //               });
-  //             },
-  //             rowHeight: 30,
-  //             daysOfWeekVisible: false,
-  //             calendarStyle: CalendarStyle(
-  //               cellMargin: const EdgeInsets.all(1.0),
-  //               cellPadding: EdgeInsets.zero,
-  //               selectedDecoration: BoxDecoration(
-  //                 color: Colors.brown[600],
-  //                 borderRadius: BorderRadius.circular(4),
-  //                 shape: BoxShape.rectangle
-  //               ),
-  //               selectedTextStyle: const TextStyle(
-  //                 color: Colors.white,
-  //                 fontSize: 16,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //               todayDecoration: BoxDecoration(
-  //                 color: Colors.grey,
-  //                 shape:  BoxShape.rectangle,
-  //                 borderRadius: BorderRadius.circular(4),
-  //                 border: Border.all(color: Color(0xFF6D4C41), width: 2 ),
-  //               ),
-  //               todayTextStyle: const TextStyle(
-  //                 color: Colors.white,
-  //                 fontWeight: FontWeight.bold,
-  //               ),
-  //               defaultTextStyle: const TextStyle(color: Colors.black87),
-  //               weekendTextStyle: const TextStyle(color: Colors.redAccent),
-  //               outsideTextStyle: const TextStyle(color: Colors.grey),
-  //             ),
-  //             headerStyle: HeaderStyle(
-  //               formatButtonVisible: false,
-  //               headerPadding: const EdgeInsets.symmetric(vertical:0),
-  //               titleCentered: true,
-  //               leftChevronIcon: Icon(Icons.arrow_back, color: Colors.brown[600], size: 25,),
-  //               rightChevronIcon: Icon(Icons.arrow_forward, color: Colors.brown[600], size: 25,),
-  //             ),
-  //           ),
-  //   ],
-  //         ),
-  //       ),
-  //         SizedBox(
-  //           height: 30,
-  //           width: 70,
-  //           child: ElevatedButton(
-  //               onPressed: () {
-  //                 setState(() {
-  //                   _showCalendarPanel = false;
-  //                 });
-  //               },
-  //               child: Text("OK", style: TextStyle(
-  //                 fontSize: 14
-  //               ),),
-  //             style: ElevatedButton.styleFrom(
-  //               backgroundColor: Colors.brown[600],
-  //               foregroundColor: Colors.white,
-  //                 // padding: EdgeInsets.symmetric(vertical: 2, horizontal: 5),
-  //               shape: RoundedRectangleBorder(
-  //                 borderRadius: BorderRadius.circular(10)
-  //               )
-  //             ),
-  //           ),
-  //         )
-  //   ],
-  //     ),
-  //   );
-  // }
-  Widget buildYearMonthSelector() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-
-        /// ◀ Previous Year
-        IconButton(
-          icon: const Icon(Icons.arrow_left),
-          onPressed: () {
-            setState(() {
-              _selectedYear--;
-            });
-          },
-        ),
-
-        /// Year Dropdown
-        DropdownButton<int>(
-          value: _selectedYear,
-          items: List.generate(20, (index) {
-            final year = DateTime.now().year - 10 + index;
-            return DropdownMenuItem(
-              value: year,
-              child: Text('$year 年'),
-            );
-          }),
-          onChanged: (value) {
-            setState(() {
-              _selectedYear = value!;
-            });
-          },
-        ),
-
-        const SizedBox(width: 8),
-
-        /// Month Dropdown
-        DropdownButton<int>(
-          value: _startMonthForyear,
-          items: List.generate(12, (index) {
-            final month = index + 1;
-            return DropdownMenuItem(
-              value: month,
-              child: Text('$month 月'),
-            );
-          }),
-          onChanged: (value) {
-            setState(() {
-              _selectedMonth = value! as DateTime?;
-            });
-          },
-        ),
-
-        /// ▶ Next Year
-        IconButton(
-          icon: const Icon(Icons.arrow_right),
-          onPressed: () {
-            setState(() {
-              _selectedYear++;
-            });
-          },
-        ),
-      ],
-    );
-  }
-
-
-  Widget _buildSearchButton() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-      child: SizedBox(
-        width: double.infinity,
-        child: ElevatedButton(
-          onPressed: () {
-
-            setState(() {
-              _selectedBarIndex = -1;
-              _showTooltip = false;
-            });
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.blue,
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: const Text(
-            'Search',
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildGraphArea() {
-    if (_currentData.isEmpty) {
+    if (provider.currentData.isEmpty) {
       return const Center(
         child: Text('No data available'),
       );
@@ -1246,28 +168,34 @@ class _HistoryPageState extends State<HistoryPage> {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: SizedBox(
-              width: _currentData.length * 60.0,
+              width: provider.currentData.length * 60.0,
               height: 300,
               child: BarChart(
                 BarChartData(
                   alignment: BarChartAlignment.spaceAround,
-                  maxY: _getMaxValue() * 1.2,
+                  maxY: provider.getMaxValue() * 1.2,
                   minY: 0,
+
+                  /// 👇 touch handler
                   barTouchData: BarTouchData(
                     enabled: true,
                     touchCallback: (event, response) {
-                      if (response != null && response.spot != null) {
-                        setState(() {
-                          _selectedBarIndex = response.spot!.touchedBarGroupIndex;
-                          _showTooltip = true;
-                        });
+                      if (response != null &&
+                          response.spot != null &&
+                          event.isInterestedForInteractions) {
+                        context
+                            .read<HistoryProvider>()
+                            .selectBar(response.spot!.touchedBarGroupIndex);
                       }
                     },
+
                     touchTooltipData: BarTouchTooltipData(
                       tooltipPadding: const EdgeInsets.all(8),
                       tooltipMargin: 8,
                       getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        final item = _currentData[group.x.toInt()];
+                        final item =
+                        provider.currentData[group.x.toInt()];
+
                         String label;
                         double value;
 
@@ -1289,31 +217,37 @@ class _HistoryPageState extends State<HistoryPage> {
                       },
                     ),
                   ),
+
+                  /// 👇 axis titles
                   titlesData: FlTitlesData(
-                    show: true,
                     bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
                         getTitlesWidget: (value, meta) {
                           final index = value.toInt();
-                          if (index >= 0 && index < _currentData.length) {
-                            return Padding(
-                              padding: const EdgeInsets.only(top: 4.0),
-                              child: Text(
-                                _currentData[index].label,
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: _selectedBarIndex == index
-                                      ? Colors.blue
-                                      : Colors.grey[600],
-                                  fontWeight: _selectedBarIndex == index
-                                      ? FontWeight.bold
-                                      : FontWeight.normal,
-                                ),
-                              ),
-                            );
+                          if (index < 0 ||
+                              index >= provider.currentData.length) {
+                            return const SizedBox();
                           }
-                          return const Text('');
+
+                          final isSelected =
+                              provider.selectedBarIndex == index;
+
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Text(
+                              provider.currentData[index].label,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: isSelected
+                                    ? Colors.blue
+                                    : Colors.grey,
+                                fontWeight: isSelected
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                              ),
+                            ),
+                          );
                         },
                         reservedSize: 30,
                       ),
@@ -1324,34 +258,33 @@ class _HistoryPageState extends State<HistoryPage> {
                         getTitlesWidget: (value, meta) {
                           if (value % 10 == 0) {
                             return Text(
-                              '${value.toInt()}',
+                              value.toInt().toString(),
                               style: const TextStyle(fontSize: 10),
                             );
                           }
-                          return const Text('');
+                          return const SizedBox();
                         },
                         reservedSize: 40,
                       ),
                     ),
-                    rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    topTitles:
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles:
+                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   ),
+
                   gridData: FlGridData(
                     show: true,
                     drawVerticalLine: false,
                     horizontalInterval: 10,
-                    getDrawingHorizontalLine: (value) {
-                      return FlLine(
-                        color: Colors.grey[200],
-                        strokeWidth: 1,
-                      );
-                    },
                   ),
+
                   borderData: FlBorderData(
                     show: true,
                     border: Border.all(color: Colors.grey[300]!),
                   ),
-                  barGroups: _buildBarGroups(),
+
+                  barGroups: _buildBarGroups(provider),
                 ),
               ),
             ),
@@ -1361,39 +294,35 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  List<BarChartGroupData> _buildBarGroups() {
-    return _currentData.asMap().entries.map((entry) {
-      final index = entry.key;
-      final item = entry.value;
-      final isSelected = _selectedBarIndex == index;
-      final barWidth = 8.0;
+
+  List<BarChartGroupData> _buildBarGroups(HistoryProvider provider) {
+    return List.generate(provider.currentData.length, (index) {
+      final item = provider.currentData[index];
+      final isSelected = provider.selectedBarIndex == index;
 
       return BarChartGroupData(
         x: index,
-        barsSpace: 4,
         barRods: [
           BarChartRodData(
             toY: item.generatedEnergy,
-            width: barWidth,
-            color: isSelected ? Colors.green[400]! : Colors.green,
-            borderRadius: BorderRadius.circular(2),
+            width: 8,
+            color: isSelected ? Colors.blue : Colors.green,
           ),
           BarChartRodData(
             toY: item.selfConsumption,
-            width: barWidth,
-            color: isSelected ? Colors.orange[400]! : Colors.red,
-            borderRadius: BorderRadius.circular(2),
+            width: 8,
+            color: isSelected ? Colors.orange : Colors.brown,
           ),
           BarChartRodData(
             toY: item.powerUsage,
-            width: barWidth,
-            color: isSelected ? Colors.blue[400]! : Colors.blue,
-            borderRadius: BorderRadius.circular(2),
+            width: 8,
+            color: isSelected ? Colors.red : Colors.grey,
           ),
         ],
       );
-    }).toList();
+    });
   }
+
 
   Widget _buildLegend() {
     return Container(

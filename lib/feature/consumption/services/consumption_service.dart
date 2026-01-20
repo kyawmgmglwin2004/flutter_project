@@ -1,15 +1,14 @@
-
-import 'package:ntt/mock/consumption_detail_mock_data.dart';
-import 'package:ntt/mock/consumption_mock_data.dart';
+import '../../../mock/consumption_detail_mock_data.dart';
+import '../../../mock/consumption_mock_data.dart';
 
 class ConsumptionService {
-  ConsumptionData? getByFacilityId(String facilityId) {
-    final data = getMockData();
+  Future<ConsumptionData?> getByFacilityId(String facilityId) async {
+    await Future.delayed(const Duration(seconds: 2));
+    final data = await getMockData();
+    print("======================================API");
 
     try {
-      return data.firstWhere(
-            (item) => item.facilityId == facilityId,
-      );
+      return data.firstWhere((item) => item.facilityId == facilityId);
     } catch (e) {
       return null;
     }

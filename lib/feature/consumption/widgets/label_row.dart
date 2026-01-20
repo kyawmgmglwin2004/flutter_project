@@ -22,7 +22,7 @@ class LabelRow extends StatelessWidget {
             label,
             style: const TextStyle(
               color: Colors.blue,
-              fontWeight: FontWeight.bold,
+              // fontWeight: FontWeight.bold,
               fontSize: 17,
             ),
           ),

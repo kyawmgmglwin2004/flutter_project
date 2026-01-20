@@ -12,6 +12,7 @@ class ConsumptionData {
   final double todayTotalGeneration;
   final double todayTotalSelfConsumption;
   final double todayTotalPowerUsage;
+  final String imagePath;
 
   ConsumptionData({
     required this.facilityId,
@@ -25,6 +26,7 @@ class ConsumptionData {
     required this.todayTotalGeneration,
     required this.todayTotalSelfConsumption,
     required this.todayTotalPowerUsage,
+    required this.imagePath
 });
 
   String formatValue(double value) {
@@ -43,7 +45,8 @@ class ConsumptionData {
         currentPowerUsage: json['currentPowerUsage'],
         todayTotalGeneration: json['todayTotalGeneration'],
         todayTotalSelfConsumption: json['todayTotalSelfConsumption'],
-        todayTotalPowerUsage: json['todayTotalPowerUsage']);
+        todayTotalPowerUsage: json['todayTotalPowerUsage'],
+        imagePath: json['imagePath']);
   }
   Map<String, dynamic> toJson() {
     return {
@@ -58,6 +61,7 @@ class ConsumptionData {
       'todayTotalGeneration': todayTotalGeneration,
       'todayTotalSelfConsumption': todayTotalSelfConsumption,
       'todayTotalPowerUsage': todayTotalPowerUsage,
+      'imagePath': imagePath
     };
   }
 
