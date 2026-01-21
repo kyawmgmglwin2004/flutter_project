@@ -45,19 +45,29 @@ class HistoryProvider extends ChangeNotifier{
   Future<void> loadData() async {
     switch (_selectedDisplayType) {
       case DisplayType.hourly:
+        _currentData = await _historyService.getHourlyData(
+          selectedDate.year,
+          selectedDate.month,
+          selectedDate.day,
+        );
+        break;
 
-        _currentData = await _historyService.getHourlyData();
-        print('print====================$currentData');
-        break;
       case DisplayType.daily:
-        _currentData = await _historyService.getDailyData();
+        if (selectedMonth != null) {
+          _currentData = await _historyService.getDailyData(
+            selectedMonth!.year,
+            selectedMonth!.month,
+          );
+        }
         break;
+
       case DisplayType.monthly:
-        _currentData = await _historyService.getMonthlyData();
+        _currentData = await _historyService.getMonthlyData(selectedDate.year);
         break;
     }
     notifyListeners();
   }
+
   void setDisplayType (DisplayType type) {
     print('=============================================$type');
     _selectedDisplayType = type;
@@ -67,6 +77,7 @@ class HistoryProvider extends ChangeNotifier{
   }
 
   void setDate(DateTime date, DateTime focusedDay) {
+    print("==================selectDay $selectedDate");
     _selectedDate = date;
     notifyListeners();
   }

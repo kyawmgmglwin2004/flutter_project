@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ntt/core/theme/app_theme.dart';
+import '../theme/app_theme.dart';
 
 class ButtonWidget extends StatelessWidget {
   // const ButtonWidget({super.key});

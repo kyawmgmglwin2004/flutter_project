@@ -278,7 +278,7 @@ class _ConsumptionPageState extends State<ConsumptionPage> {
                                 Navigator.pushNamed(
                                   context,
                                   AppRoute.history,
-                                  arguments: getMockHistoryData(),
+                                  arguments: "123123"
                                 );
                               },
                               child: const Text("電力量履歴確認"),

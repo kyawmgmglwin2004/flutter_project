@@ -5,7 +5,7 @@ class ConsumptionData {
   final String facilityName;
   final String cityInfo;
   final String measurementTimePeriod;
-  final double cumulativePowerGeneration;
+  final int cumulativePowerGeneration;
   final double currentPowerGeneration;
   final double currentSelfConsumption;
   final double currentPowerUsage;
@@ -39,14 +39,16 @@ class ConsumptionData {
         facilityName: json['facilityName'],
         cityInfo: json['cityInfo'],
         measurementTimePeriod: json['measurementTimePeriod'],
-        cumulativePowerGeneration: json['cumulativePowerGeneration'],
+        cumulativePowerGeneration: (json['cumulativePowerGeneration'] as num).toInt(),
         currentPowerGeneration: json['currentPowerGeneration'],
         currentSelfConsumption: json['currentSelfConsumption'],
         currentPowerUsage: json['currentPowerUsage'],
         todayTotalGeneration: json['todayTotalGeneration'],
         todayTotalSelfConsumption: json['todayTotalSelfConsumption'],
         todayTotalPowerUsage: json['todayTotalPowerUsage'],
-        imagePath: json['imagePath']);
+        imagePath: json['imagePath']
+    );
+
   }
   Map<String, dynamic> toJson() {
     return {
@@ -61,7 +63,7 @@ class ConsumptionData {
       'todayTotalGeneration': todayTotalGeneration,
       'todayTotalSelfConsumption': todayTotalSelfConsumption,
       'todayTotalPowerUsage': todayTotalPowerUsage,
-      'imagePath': imagePath
+      'imagePath' : imagePath,
     };
   }
 

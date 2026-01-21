@@ -12,24 +12,25 @@ import '../widgets/calendar_panel.dart';
 import '../widgets/date_selection.dart';
 import '../widgets/day_picker.dart';
 import '../widgets/display_type.dart';
+import '../widgets/history_graph.dart';
 import '../widgets/month_picker.dart';
 import '../widgets/year_picker.dart';
 
 
 class HistoryPage extends StatefulWidget {
-  final String facilityName;
+  // final String facilityName;
   final String facilityId;
-  final List<PowerHistoryData> initialHourlyData;
-  final List<PowerHistoryData> initialDailyData;
-  final List<PowerHistoryData> initialMonthlyData;
+  // final List<PowerHistoryData> initialHourlyData;
+  // final List<PowerHistoryData> initialDailyData;
+  // final List<PowerHistoryData> initialMonthlyData;
 
   const HistoryPage({
     super.key,
-    required this.facilityName,
+    // required this.facilityName,
     required this.facilityId,
-    required this.initialHourlyData,
-    required this.initialDailyData,
-    required this.initialMonthlyData,
+    // required this.initialHourlyData,
+    // required this.initialDailyData,
+    // required this.initialMonthlyData,
   });
 
 
@@ -89,7 +90,7 @@ class _HistoryPageState extends State<HistoryPage> {
   void initState() {
     super.initState();
     getFacilityId();
-    _currentData = widget.initialHourlyData;
+    // _currentData = widget.initialHourlyData;
     _selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
     _startMonth = DateTime(DateTime.now().year, 1);
     _endMonth = DateTime(DateTime.now().year, 12);
@@ -132,7 +133,7 @@ class _HistoryPageState extends State<HistoryPage> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: _buildGraphArea(context)
+                    child: buildGraphArea(context)
                   ),
                 ),
 
@@ -151,177 +152,187 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  Widget _buildGraphArea(BuildContext context) {
-    final provider = context.watch<HistoryProvider>();
-
-    if (provider.currentData.isEmpty) {
-      return const Center(
-        child: Text('No data available'),
-      );
-    }
-
-    return Column(
-      children: [
-        const SizedBox(height: 16),
-
-        Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: SizedBox(
-              width: provider.currentData.length * 60.0,
-              height: 300,
-              child: BarChart(
-                BarChartData(
-                  alignment: BarChartAlignment.spaceAround,
-                  maxY: provider.getMaxValue() * 1.2,
-                  minY: 0,
-
-                  /// 👇 touch handler
-                  barTouchData: BarTouchData(
-                    enabled: true,
-                    touchCallback: (event, response) {
-                      if (response != null &&
-                          response.spot != null &&
-                          event.isInterestedForInteractions) {
-                        context
-                            .read<HistoryProvider>()
-                            .selectBar(response.spot!.touchedBarGroupIndex);
-                      }
-                    },
-
-                    touchTooltipData: BarTouchTooltipData(
-                      tooltipPadding: const EdgeInsets.all(8),
-                      tooltipMargin: 8,
-                      getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                        final item =
-                        provider.currentData[group.x.toInt()];
-
-                        String label;
-                        double value;
-
-                        if (rodIndex == 0) {
-                          label = 'Generated';
-                          value = item.generatedEnergy;
-                        } else if (rodIndex == 1) {
-                          label = 'Home Cons.';
-                          value = item.selfConsumption;
-                        } else {
-                          label = 'Usage';
-                          value = item.powerUsage;
-                        }
-
-                        return BarTooltipItem(
-                          '$label: ${value.toStringAsFixed(1)} kWh\n${item.label}',
-                          const TextStyle(color: Colors.white),
-                        );
-                      },
-                    ),
-                  ),
-
-                  /// 👇 axis titles
-                  titlesData: FlTitlesData(
-                    bottomTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          final index = value.toInt();
-                          if (index < 0 ||
-                              index >= provider.currentData.length) {
-                            return const SizedBox();
-                          }
-
-                          final isSelected =
-                              provider.selectedBarIndex == index;
-
-                          return Padding(
-                            padding: const EdgeInsets.only(top: 4),
-                            child: Text(
-                              provider.currentData[index].label,
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: isSelected
-                                    ? Colors.blue
-                                    : Colors.grey,
-                                fontWeight: isSelected
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                              ),
-                            ),
-                          );
-                        },
-                        reservedSize: 30,
-                      ),
-                    ),
-                    leftTitles: AxisTitles(
-                      sideTitles: SideTitles(
-                        showTitles: true,
-                        getTitlesWidget: (value, meta) {
-                          if (value % 10 == 0) {
-                            return Text(
-                              value.toInt().toString(),
-                              style: const TextStyle(fontSize: 10),
-                            );
-                          }
-                          return const SizedBox();
-                        },
-                        reservedSize: 40,
-                      ),
-                    ),
-                    topTitles:
-                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles:
-                    const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  ),
-
-                  gridData: FlGridData(
-                    show: true,
-                    drawVerticalLine: false,
-                    horizontalInterval: 10,
-                  ),
-
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border.all(color: Colors.grey[300]!),
-                  ),
-
-                  barGroups: _buildBarGroups(provider),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-
-  List<BarChartGroupData> _buildBarGroups(HistoryProvider provider) {
-    return List.generate(provider.currentData.length, (index) {
-      final item = provider.currentData[index];
-      final isSelected = provider.selectedBarIndex == index;
-
-      return BarChartGroupData(
-        x: index,
-        barRods: [
-          BarChartRodData(
-            toY: item.generatedEnergy,
-            width: 8,
-            color: isSelected ? Colors.blue : Colors.green,
-          ),
-          BarChartRodData(
-            toY: item.selfConsumption,
-            width: 8,
-            color: isSelected ? Colors.orange : Colors.brown,
-          ),
-          BarChartRodData(
-            toY: item.powerUsage,
-            width: 8,
-            color: isSelected ? Colors.red : Colors.grey,
-          ),
-        ],
-      );
-    });
-  }
+  // Widget _buildGraphArea(BuildContext context) {
+  //   final provider = context.watch<HistoryProvider>();
+  //
+  //   if (provider.currentData.isEmpty) {
+  //     return const Center(
+  //       child: Text('No data available'),
+  //     );
+  //   }
+  //
+  //   return Column(
+  //     children: [
+  //       const SizedBox(height: 16),
+  //
+  //       Expanded(
+  //         child: SingleChildScrollView(
+  //           scrollDirection: Axis.horizontal,
+  //           child: SizedBox(
+  //             width: provider.currentData.length * 60.0,
+  //             height: 300,
+  //             child: BarChart(
+  //               BarChartData(
+  //                 alignment: BarChartAlignment.spaceAround,
+  //                 maxY: provider.getMaxValue() * 1.2,
+  //                 minY: 0,
+  //
+  //                 barTouchData: BarTouchData(
+  //                   enabled: true,
+  //                   touchCallback: (event, response) {
+  //                     if (response != null &&
+  //                         response.spot != null &&
+  //                         event.isInterestedForInteractions) {
+  //                       context
+  //                           .read<HistoryProvider>()
+  //                           .selectBar(response.spot!.touchedBarGroupIndex);
+  //                     }
+  //                   },
+  //
+  //                   touchTooltipData: BarTouchTooltipData(
+  //                     tooltipPadding: const EdgeInsets.all(8),
+  //                     tooltipMargin: 8,
+  //                     getTooltipItem: (group, groupIndex, rod, rodIndex) {
+  //                       final item =
+  //                       provider.currentData[group.x.toInt()];
+  //
+  //                       String label;
+  //                       double value;
+  //
+  //                       if (rodIndex == 0) {
+  //                         label = 'Generated';
+  //                         value = item.generatedEnergy;
+  //                       } else if (rodIndex == 1) {
+  //                         label = 'Home Cons.';
+  //                         value = item.selfConsumption;
+  //                       } else {
+  //                         label = 'Usage';
+  //                         value = item.powerUsage;
+  //                       }
+  //
+  //                       return BarTooltipItem(
+  //                         '$label: ${value.toStringAsFixed(1)} kWh\n${item.label}',
+  //                         const TextStyle(color: Colors.white),
+  //                       );
+  //                     },
+  //                   ),
+  //                 ),
+  //
+  //
+  //                 titlesData: FlTitlesData(
+  //                   bottomTitles: AxisTitles(
+  //                     sideTitles: SideTitles(
+  //                       showTitles: true,
+  //                       getTitlesWidget: (value, meta) {
+  //                         final index = value.toInt();
+  //                         if (index < 0 ||
+  //                             index >= provider.currentData.length) {
+  //                           return const SizedBox();
+  //                         }
+  //
+  //                         return Padding(
+  //                           padding: const EdgeInsets.only(top: 4),
+  //                           child: Text(
+  //                             provider.currentData[index].label,
+  //                             style: TextStyle(
+  //                                 fontSize: 12,
+  //                                 color: Colors.black,
+  //                                 fontWeight: FontWeight.bold
+  //
+  //                             ),
+  //                           ),
+  //                         );
+  //                       },
+  //                       reservedSize: 100,
+  //                     ),
+  //                   ),
+  //                   leftTitles: AxisTitles(
+  //                     sideTitles: SideTitles(
+  //                       showTitles: true,
+  //                       getTitlesWidget: (value, meta) {
+  //                         if (value % 10 == 0) {
+  //                           return Text(
+  //                             value.toInt().toString(),
+  //                             style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+  //                           );
+  //                         }
+  //                         return const SizedBox();
+  //                       },
+  //                       reservedSize: 40,
+  //                     ),
+  //                   ),
+  //                   topTitles:
+  //                   const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+  //                   rightTitles:
+  //                   const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+  //                 ),
+  //
+  //                 gridData: FlGridData(
+  //                     show: true, // inside lines
+  //                     drawVerticalLine: false,
+  //                     horizontalInterval: 10000,
+  //                     getDrawingHorizontalLine: (value) {
+  //                       return FlLine(
+  //                         color: provider.selectedDisplayType == DisplayType.hourly
+  //                             ? Colors.green
+  //                             :provider.selectedDisplayType == DisplayType.daily
+  //                             ? Colors.red : Colors.blue,
+  //                         strokeWidth: 1,
+  //                         dashArray: null,
+  //                       );
+  //                     }
+  //                 ),
+  //
+  //                 borderData: FlBorderData(
+  //                   show: true,
+  //                   border: Border.all(color: provider.selectedDisplayType == DisplayType.hourly
+  //                       ? Colors.green
+  //                       :provider.selectedDisplayType == DisplayType.daily
+  //                       ? Colors.red : Colors.blue),
+  //                 ),
+  //
+  //                 barGroups: _buildBarGroups(provider),
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       ),
+  //
+  //     ],
+  //   );
+  // }
+  //
+  //
+  // List<BarChartGroupData> _buildBarGroups(HistoryProvider provider) {
+  //   return List.generate(provider.currentData.length, (index) {
+  //     final item = provider.currentData[index];
+  //     // final isSelected = provider.selectedBarIndex == index;
+  //
+  //     return BarChartGroupData(
+  //       x: index,
+  //       barRods: [
+  //         BarChartRodData(
+  //           toY: item.generatedEnergy,
+  //           width: 11,
+  //           color: Colors.green,
+  //           borderRadius: BorderRadius.circular(1)
+  //         ),
+  //         BarChartRodData(
+  //           toY: item.selfConsumption,
+  //           width: 11,
+  //           color: Colors.orange[800],
+  //             borderRadius: BorderRadius.circular(1)
+  //         ),
+  //         BarChartRodData(
+  //           toY: item.powerUsage,
+  //           width: 11,
+  //           color: Colors.blue,
+  //             borderRadius: BorderRadius.circular(1)
+  //         ),
+  //       ],
+  //     );
+  //   });
+  // }
 
 
   Widget _buildLegend() {
@@ -329,17 +340,18 @@ class _HistoryPageState extends State<HistoryPage> {
       margin: const EdgeInsets.symmetric(vertical: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [ Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _legendItem(Colors.green),
-              const SizedBox(height: 6),
-              _legendItem(Colors.red),
-              const SizedBox(height: 6),
-              _legendItem(Colors.blue),
-            ],
-          ),
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+          //   Column(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     _legendItem(Colors.green),
+          //     const SizedBox(height: 6),
+          //     _legendItem(Colors.red),
+          //     const SizedBox(height: 6),
+          //     _legendItem(Colors.blue),
+          //   ],
+          // ),
 
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
@@ -371,18 +383,18 @@ class _HistoryPageState extends State<HistoryPage> {
     );
   }
 
-  double _getMaxValue() {
-    if (_currentData.isEmpty) return 50.0;
-    double max = 0;
-    for (var item in _currentData) {
-      max = [max, item.generatedEnergy, item.selfConsumption, item.powerUsage]
-          .reduce((a, b) => a > b ? a : b);
-    }
-    return max;
-  }
+  // double _getMaxValue() {
+  //   if (_currentData.isEmpty) return 50.0;
+  //   double max = 0;
+  //   for (var item in _currentData) {
+  //     max = [max, item.generatedEnergy, item.selfConsumption, item.powerUsage]
+  //         .reduce((a, b) => a > b ? a : b);
+  //   }
+  //   return max;
+  // }
 }
 
-bool isSameDay(DateTime a, DateTime b) {
-  return a.year == b.year && a.month == b.month && a.day == b.day;
-}
+// bool isSameDay(DateTime a, DateTime b) {
+//   return a.year == b.year && a.month == b.month && a.day == b.day;
+// }
 

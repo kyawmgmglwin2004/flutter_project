@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ntt/core/route/app_route.dart';
-import 'package:ntt/core/theme/app_theme.dart';
-import 'package:ntt/feature/history/controllers/history_controller.dart';
-import 'package:ntt/feature/history/history_index.dart';
-import 'package:ntt/feature/consumption/consumption_index.dart';
-import 'package:ntt/feature/facility_search/pages/facility_search.dart';
 import 'package:provider/provider.dart';
-
 import 'core/provider/consumption_provider.dart';
+import 'core/route/app_route.dart';
+import 'core/theme/app_theme.dart';
 import 'feature/consumption/controllers/consumption_controller.dart';
 import 'feature/consumption/models/consumption_args.dart';
+import 'feature/consumption/pages/consumption_page.dart';
 import 'feature/consumption/services/consumption_service.dart';
+import 'feature/facility_search/pages/facility_search.dart';
+import 'feature/history/controllers/history_controller.dart';
+import 'feature/history/pages/history_page.dart';
 import 'mock/history_mock_data.dart';
 
 void main() {
@@ -57,61 +56,21 @@ class MyApp extends StatelessWidget {
           AppRoute.search: (context) => const FacilitySearchPage(),
         },
         onGenerateRoute: (settings) {
-          // if (settings.name == AppRoute.history) {
-          //   final args = settings.arguments;
-
-          //   if (args is Map<String, dynamic>) {
-          //     final facilityName =
-          //         args['facilityName'] ?? 'Unknown FacilitySearch';
-          //     final facilityId = args['facilityId'] ?? 'F001';
-          //
-          //     return MaterialPageRoute(
-          //       builder: (_) => HistoryPage(
-          //         facilityName: facilityName,
-          //         facilityId: facilityId,
-          //         initialHourlyData: getMockHourlyData(),
-          //         initialDailyData: getMockDailyData(),
-          //         initialMonthlyData: getMockMonthlyData(),
-          //       ),
-          //     );
-          //   } else if (args is List<PowerHistoryData>) {
-          //     // Old way: Just data list (for backward compatibility)
-          //     return MaterialPageRoute(
-          //       builder: (_) => HistoryPage(
-          //         facilityName: 'Power history',
-          //         facilityId: 'HIST001',
-          //         initialHourlyData: args, // Use the passed data
-          //         initialDailyData: getMockDailyData(),
-          //         initialMonthlyData: getMockMonthlyData(),
-          //       ),
-          //     );
-          //   } else {
-          //     // Default if no arguments
-          //     return MaterialPageRoute(
-          //       builder: (_) => HistoryPage(
-          //         facilityName: 'Demo FacilitySearch',
-          //         facilityId: 'DEMO001',
-          //         initialHourlyData: getMockHourlyData(),
-          //         initialDailyData: getMockDailyData(),
-          //         initialMonthlyData: getMockMonthlyData(),
-          //       ),
-          //     );
-          //   }
-          // } else
 
           if(settings.name == AppRoute.history) {
             final args = settings.arguments;
-            if (args is List<PowerHistoryData>) {
+            if (args is String) {
               // Old way: Just data list (for backward compatibility)
               return MaterialPageRoute(
                 builder: (_) => ChangeNotifierProvider(
                   create: (_) => HistoryProvider()..init(),
                   child: HistoryPage(
-                    facilityName: 'Power history',
-                    facilityId: 'HIST001',
-                    initialHourlyData: args, // Use the passed data
-                    initialDailyData: getMockDailyData(),
-                    initialMonthlyData: getMockMonthlyData(),
+                    // facilityName: 'Power history',
+                    // facilityId: 'HIST001',
+                    // initialHourlyData: args, initialDailyData: [], initialMonthlyData: [], // Use the passed data
+                    // initialDailyData: getMockDailyData(),
+                    // initialMonthlyData: getMockMonthlyData(),
+                    facilityId: args,
                   ),
                 ),
               );
