@@ -15,7 +15,7 @@ class MonthPickerRow extends StatelessWidget {
     final monthFormat = DateFormat("yyyy/MM");
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -27,8 +27,6 @@ class MonthPickerRow extends StatelessWidget {
               color: Colors.grey,
             ),
           ),
-
-          const SizedBox(height: 8),
 
           Row(
             children: [
@@ -69,7 +67,7 @@ class MonthPickerRow extends StatelessWidget {
 
               ElevatedButton(
                 onPressed: () {
-                  provider.loadData();  // monthly reload
+                  provider.loadData();
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.brown[600],

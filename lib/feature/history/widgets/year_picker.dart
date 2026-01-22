@@ -4,6 +4,7 @@ import 'package:ntt/feature/history/widgets/start_year_box.dart';
 import 'package:provider/provider.dart';
 
 
+
 import '../controllers/history_controller.dart';
 import 'end_year_box.dart';
 
@@ -14,7 +15,7 @@ class YearPickerRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<HistoryProvider>();
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -111,6 +112,7 @@ class YearPickerRow extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
+                      provider.loadData();
                       // setState(() {
                       //   _showYearMonthPicker = !_showYearMonthPicker;
                       //   _selectedBarIndex = -1;

@@ -25,7 +25,7 @@ class DisplayTypeRadio extends StatelessWidget {
       },
       child: Container(
         height: 30,
-        width: 110,
+        width: 100,
         padding: const EdgeInsets.only(left: 8),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),

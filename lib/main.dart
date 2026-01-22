@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+
 import 'core/provider/consumption_provider.dart';
 import 'core/route/app_route.dart';
 import 'core/theme/app_theme.dart';

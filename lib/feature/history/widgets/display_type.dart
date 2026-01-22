@@ -2,13 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ntt/feature/history/widgets/radio_buttom.dart';
 import 'package:provider/provider.dart';
-
 import '../../../mock/history_mock_data.dart';
 import '../controllers/history_controller.dart';
 Widget buildDisplayTypeSection(BuildContext context) {
   final provider = context.watch<HistoryProvider>();
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12),
+    padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 12),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

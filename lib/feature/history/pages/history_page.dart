@@ -110,6 +110,7 @@ class _HistoryPageState extends State<HistoryPage> {
             padding: EdgeInsets.all(15),
             child: Column(
               children: [
+                SizedBox(height: 20,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -142,7 +143,7 @@ class _HistoryPageState extends State<HistoryPage> {
               ],
             ),
           ),
-        ),
+                  ),
           if (provider.showCalendarPanel)
             Center(
               child: CalendarPanel(),
