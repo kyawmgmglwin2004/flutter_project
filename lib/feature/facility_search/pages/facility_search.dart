@@ -53,6 +53,8 @@ class _FacilitySearchPageState extends State<FacilitySearchPage> {
                           textAlignVertical: TextAlignVertical.center,
                           controller: controller.facilityController,
                           maxLength: 6,
+                          readOnly: controller.isLoading,
+                          showCursor: !controller.isLoading,
                           decoration: InputDecoration(
                             counterText: "",
                             isDense: true,

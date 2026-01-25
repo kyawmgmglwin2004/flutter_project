@@ -1,10 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ntt/feature/history/widgets/start_year_box.dart';
 import 'package:provider/provider.dart';
-
-
-
 import '../controllers/history_controller.dart';
 import 'end_year_box.dart';
 
@@ -15,7 +11,7 @@ class YearPickerRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<HistoryProvider>();
     return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 7.0, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -30,24 +26,39 @@ class YearPickerRow extends StatelessWidget {
                     ),),
                     Container(
                       height: 40,
-                      padding: EdgeInsets.only(right: 20,),
+                      padding: EdgeInsets.only(right: 6),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey!, width: 2),
+                        border: Border.all(color: Colors.grey, width: 2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Row(
-                          children: [ IconButton(
-                            icon: const Icon(Icons.calendar_month, size: 20),
-                            onPressed: () {
-                             showYearPicker(context);
-                            },
-                          ),
+                          children: [
+                            SizedBox(width: 7,),
+                            GestureDetector(
+                              onTap: () {
+                                showYearPicker(context);
+                              },
+                               child:  const Icon(Icons.calendar_month, size: 20),
+                            ),
+                            SizedBox(width: 7,),
                             Text(
-                              provider.startYear != null && provider.startMonthForYear != null
-                                  ? '${provider.startYear}/${provider.startMonthForYear}'
-                                  : '${DateTime.now().year}/1',
+                              '${provider.startYear}/${provider.startMonthForYear}',
                               style: const TextStyle(fontSize: 14),
                             ),
+                            SizedBox(width: 5,),
+                            Container(
+                              height: 25,
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey, width: 2 ),
+                                borderRadius: BorderRadius.circular(4)
+                              ),
+                              child: Text("0時",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey[400]
+                              ),),
+                            )
 
                           ]
                       ),
@@ -57,6 +68,12 @@ class YearPickerRow extends StatelessWidget {
 
               ],
             ),
+           Column(
+             children: [
+               SizedBox(height: 25,),
+               Text("~"),
+             ],
+           ),
             Row(
               children: [
                 Column(
@@ -68,24 +85,41 @@ class YearPickerRow extends StatelessWidget {
                     ),),
                     Container(
                       height: 40,
-                      padding: EdgeInsets.only(right: 20,),
+                      padding: EdgeInsets.only(right: 6,),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey!, width: 2),
+                        border: Border.all(color: Colors.grey, width: 2),
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Row(
-                          children: [ IconButton(
-                            icon: const Icon(Icons.calendar_month, size: 20),
-                            onPressed: () {
-                              showEndYearPicker(context);
-                            },
-                          ),
+                          children: [
+                            SizedBox(width: 7,),
+                            GestureDetector(
+                              onTap: () {
+                                showEndYearPicker(context);
+                              },
+                              child:  const Icon(Icons.calendar_month, size: 20),
+                            ),
+                            SizedBox(width: 7,),
                             Text(
-                              provider.endYear != null && provider.endMonthForYear != null
+                              provider.endMonthForYear != null
                                   ? '${provider.endYear}/${provider.endMonthForYear}'
                                   : '${DateTime.now().year}/12',
                               style: const TextStyle(fontSize: 14),
                             ),
+                            SizedBox(width: 5,),
+                            Container(
+                              height: 25,
+                              padding: EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey, width: 2 ),
+                                  borderRadius: BorderRadius.circular(4)
+                              ),
+                              child: Text("0時",
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[400]
+                                ),),
+                            )
 
                           ]
                       ),
@@ -102,7 +136,7 @@ class YearPickerRow extends StatelessWidget {
                 ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.white,
-                      backgroundColor: Colors.brown[600],
+                      backgroundColor: Color(0xFF843C0B),
                       padding: const EdgeInsets.symmetric(
                         // vertical: 1,
                         horizontal: 30,
@@ -113,11 +147,6 @@ class YearPickerRow extends StatelessWidget {
                     ),
                     onPressed: () {
                       provider.loadData();
-                      // setState(() {
-                      //   _showYearMonthPicker = !_showYearMonthPicker;
-                      //   _selectedBarIndex = -1;
-                      //   _showTooltip = false;
-                      // });
 
                     },
                     child: Text("検索",

@@ -24,24 +24,23 @@ class MonthPickerRow extends StatelessWidget {
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.grey,
+              color: Color(0xFF843C0B),
             ),
           ),
 
           Row(
             children: [
-              // ▼ Month Selector Box
               Container(
                 padding: const EdgeInsets.only(right: 30, left: 10),
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.brown, width: 2),
+                  border: Border.all(color: Color(0xFF843C0B), width: 2),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Row(
                   children: [
                     IconButton(
                       icon: Icon(Icons.calendar_month,
-                          size: 30, color: Colors.brown[600]),
+                          size: 30, color: Color(0xFF843C0B)),
                       onPressed: () {
                         showCustomMonthPicker(context);
                       },
@@ -70,7 +69,7 @@ class MonthPickerRow extends StatelessWidget {
                   provider.loadData();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.brown[600],
+                  backgroundColor: Color(0xFF843C0B),
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 35),
                   shape: RoundedRectangleBorder(

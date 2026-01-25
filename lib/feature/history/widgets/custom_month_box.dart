@@ -8,6 +8,7 @@ Future<void> showCustomMonthPicker(BuildContext context) async {
   int tempYear = provider.selectedMonth?.year ?? DateTime.now().year;
   int? tempMonth = provider.selectedMonth?.month;
 
+
   final now = DateTime.now();
 
   await showDialog(
@@ -29,20 +30,20 @@ Future<void> showCustomMonthPicker(BuildContext context) async {
                   Row(
                     children: [
                       const Icon(Icons.calendar_month,
-                          color: Colors.brown, size: 40),
+                          color: Color(0xFF843C0B), size: 40),
                       const SizedBox(width: 8),
                       const Text(
                         '月を選択',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
-                          color: Color(0xFF6D4C41),
+                          color: Color(0xFF843C0B),
                         ),
                       ),
                       const Spacer(),
                       IconButton(
                         icon: const Icon(Icons.close,
-                            color: Color(0xFF6D4C41), size: 35),
+                            color: Color(0xFF843C0B), size: 35),
                         onPressed: () => Navigator.pop(context),
                       )
                     ],
@@ -50,17 +51,19 @@ Future<void> showCustomMonthPicker(BuildContext context) async {
 
                   const SizedBox(height: 2),
 
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
                         icon: const Icon(Icons.arrow_back_sharp,
-                            size: 25, color: Color(0xFF6D4C41)),
+                            size: 25, color: Color(0xFF843C0B)),
                         onPressed: () {
 
                           if (tempYear > 2000) {
-                            setDialogState(() => tempYear--);
+                            setDialogState(() {
+                              tempYear--;
+                              tempMonth = null;
+                            });
                           }
                         },
                       ),
@@ -69,15 +72,18 @@ Future<void> showCustomMonthPicker(BuildContext context) async {
                         style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF6D4C41)),
+                            color: Color(0xFF843C0B)),
                       ),
                       IconButton(
                         icon: const Icon(Icons.arrow_forward_sharp,
-                            size: 25, color: Color(0xFF6D4C41)),
+                            size: 25, color: Color(0xFF843C0B)),
                         onPressed: () {
 
                           if (tempYear < now.year) {
-                            setDialogState(() => tempYear++);
+                            setDialogState(() {
+                              tempYear++;
+                              tempMonth = null;
+                            });
                           }
                         },
                       ),
@@ -105,6 +111,7 @@ Future<void> showCustomMonthPicker(BuildContext context) async {
 
                       final isSelected = tempMonth == month;
 
+
                       return GestureDetector(
                         onTap: isFutureMonth
                             ? null
@@ -119,7 +126,8 @@ Future<void> showCustomMonthPicker(BuildContext context) async {
                             color: isFutureMonth
                                 ? Colors.grey[300]
                                 : isSelected
-                                ? Colors.brown[600]
+                                ? Color(0xFF843C0B)
+
                                 : Colors.brown[100],
                             borderRadius: BorderRadius.circular(6),
                           ),
@@ -130,7 +138,7 @@ Future<void> showCustomMonthPicker(BuildContext context) async {
                                   ? Colors.grey
                                   : isSelected
                                   ? Colors.white
-                                  : const Color(0xFF6D4C41),
+                                  : const Color(0xFF843C0B),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -147,7 +155,7 @@ Future<void> showCustomMonthPicker(BuildContext context) async {
                     height: 30,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.brown[600],
+                        backgroundColor: Color(0xFF843C0B),
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),

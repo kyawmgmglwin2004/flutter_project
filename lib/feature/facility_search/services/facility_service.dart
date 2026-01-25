@@ -4,6 +4,7 @@ import '../../../mock/consumption_mock_data.dart';
 class FacilityService {
   Future<ConsumptionData?> findFacilityById(String id) async {
     await Future.delayed(const Duration(seconds: 2));
+    print("=======search api");
     final List<ConsumptionData> data = getMockData();
 
     try {

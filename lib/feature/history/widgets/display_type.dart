@@ -4,6 +4,7 @@ import 'package:ntt/feature/history/widgets/radio_buttom.dart';
 import 'package:provider/provider.dart';
 import '../../../mock/history_mock_data.dart';
 import '../controllers/history_controller.dart';
+
 Widget buildDisplayTypeSection(BuildContext context) {
   final provider = context.watch<HistoryProvider>();
   return Padding(
@@ -17,7 +18,7 @@ Widget buildDisplayTypeSection(BuildContext context) {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: Colors.red,
+            color: Color(0xFF843C0B),
           ),
         ),
         const SizedBox(height: 5),

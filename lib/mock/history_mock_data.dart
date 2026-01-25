@@ -37,7 +37,7 @@ List<PowerHistoryData> getMockHourlyData(int year, int month, int day) {
 
 List<PowerHistoryData> getMockDailyData(int year, int month) {
   final random = Random();
-  final daysInMonth = DateTime(year, month + 1, 0).day;
+  final daysInMonth = DateTime(year, month + 2, 0).day;
 
   return List.generate(daysInMonth, (index) {
     final day = index + 1;

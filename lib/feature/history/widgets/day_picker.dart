@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../controllers/history_controller.dart';
 
 Widget buildHourlyDateSelection(BuildContext context) {
-  final DateFormat _dateFormat = DateFormat('yyyy/MM/dd');
+  final DateFormat dateFormat = DateFormat('yyyy/MM/dd');
   final provider = context.watch<HistoryProvider>();
 
   return Padding(
@@ -19,7 +19,7 @@ Widget buildHourlyDateSelection(BuildContext context) {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: Colors.grey,
+            color: Color(0xFF843C0B),
           ),
         ),
     
@@ -36,14 +36,14 @@ Widget buildHourlyDateSelection(BuildContext context) {
                   children: [
                     IconButton(
                       icon: Icon(Icons.calendar_month,
-                          size: 28, color: Colors.brown[600]),
+                          size: 28, color: Color(0xFF843C0B)),
                       onPressed: () {
                         provider.toggleCalendarPanel();
                       },
                     ),
                     SizedBox(width: 20,),
                     Text(
-                      _dateFormat.format(provider.selectedDate),
+                      dateFormat.format(provider.selectedDate),
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -59,7 +59,7 @@ Widget buildHourlyDateSelection(BuildContext context) {
                 provider.loadData();
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.brown[600],
+                backgroundColor: Color(0xFF843C0B),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 35),
                 shape: RoundedRectangleBorder(

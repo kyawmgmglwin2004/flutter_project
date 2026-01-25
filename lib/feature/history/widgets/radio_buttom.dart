@@ -1,3 +1,4 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ class DisplayTypeRadio extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        provider.closeCalendarPanel();
         provider.setDisplayType(type);
       },
       child: Container(
@@ -30,7 +32,7 @@ class DisplayTypeRadio extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? const Color(0xFF6D4C41) : Colors.grey[300]!,
+            color: isSelected ? const Color(0xFF843C0B) : Colors.grey[300]!,
             width: isSelected ? 2 : 1,
           ),
           color: Colors.white,
@@ -45,7 +47,7 @@ class DisplayTypeRadio extends StatelessWidget {
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isSelected
-                      ? const Color(0xFF6D4C41)
+                      ? const Color(0xFF843C0B)
                       : Colors.grey,
                   width: 2,
                 ),
@@ -54,7 +56,7 @@ class DisplayTypeRadio extends StatelessWidget {
                   ? const Icon(
                 Icons.circle,
                 size: 8,
-                color: Color(0xFF6D4C41),
+                color: Color(0xFF843C0B),
               )
                   : null,
             ),
@@ -66,7 +68,7 @@ class DisplayTypeRadio extends StatelessWidget {
                 fontWeight:
                 isSelected ? FontWeight.bold : FontWeight.normal,
                 color:
-                isSelected ? Colors.red : Colors.grey[700],
+                isSelected ? Color(0xFF843C0B) : Colors.grey[700],
               ),
             ),
           ],
