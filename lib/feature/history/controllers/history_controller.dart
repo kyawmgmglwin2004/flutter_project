@@ -9,7 +9,7 @@ class HistoryProvider extends ChangeNotifier {
   List<PowerHistoryData> _currentData = [];
   DisplayType _selectedDisplayType = DisplayType.hourly;
   DateTime _selectedDate = DateTime.now();
-  DateTime? _selectedMonth;
+  DateTime _selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
 
   bool _showCalendarPanel = false;
   int _startYear = DateTime.now().year;
@@ -24,7 +24,7 @@ class HistoryProvider extends ChangeNotifier {
   List<PowerHistoryData> get currentData => _currentData;
   DisplayType get selectedDisplayType => _selectedDisplayType;
   DateTime get selectedDate => _selectedDate;
-  DateTime? get selectedMonth => _selectedMonth;
+  DateTime get selectedMonth => _selectedMonth;
   bool get showCalendarPanel => _showCalendarPanel;
   int get selectedBarIndex => _selectedBarIndex;
   int get startYear => _startYear;
@@ -35,12 +35,13 @@ class HistoryProvider extends ChangeNotifier {
 
   // Init
   Future<void> init() async {
-    _selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
+    // _selectedMonth = DateTime(DateTime.now().year, DateTime.now().month);
     await loadData();
   }
 
   void setSelectedMonth(DateTime month) {
-    _selectedMonth = month;
+    _selectedMonth = DateTime(month.year, month.month);
+    print("testing==========$_selectedMonth");
     notifyListeners();
   }
 

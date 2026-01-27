@@ -11,8 +11,6 @@ class CalendarPanel extends StatelessWidget {
     final provider = context.watch<HistoryProvider>();
     final focusedMonth = DateTime(provider.focusedDate!.year, provider.focusedDate!.month);
     final lastMonth = DateTime(DateTime.now().year, DateTime.now().month);
-    // final focusedMonth = DateTime(provider.selectedDate.year, provider.selectedDate.month);
-    // final lastMonth = DateTime(DateTime.now().year, DateTime.now().month);
 
 
     return Container(
