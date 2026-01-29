@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,10 +9,7 @@ class DisplayTypeRadio extends StatelessWidget {
   final DisplayType type;
   final String label;
 
-  const DisplayTypeRadio({
-    required this.type,
-    required this.label
-  });
+  const DisplayTypeRadio({required this.type, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -46,18 +42,12 @@ class DisplayTypeRadio extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: isSelected
-                      ? const Color(0xFF843C0B)
-                      : Colors.grey,
+                  color: isSelected ? const Color(0xFF843C0B) : Colors.grey,
                   width: 2,
                 ),
               ),
               child: isSelected
-                  ? const Icon(
-                Icons.circle,
-                size: 8,
-                color: Color(0xFF843C0B),
-              )
+                  ? const Icon(Icons.circle, size: 8, color: Color(0xFF843C0B))
                   : null,
             ),
             const SizedBox(width: 5),
@@ -65,10 +55,8 @@ class DisplayTypeRadio extends StatelessWidget {
               label,
               style: TextStyle(
                 fontSize: 12,
-                fontWeight:
-                isSelected ? FontWeight.bold : FontWeight.normal,
-                color:
-                isSelected ? Color(0xFF843C0B) : Colors.grey[700],
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                color: isSelected ? Color(0xFF843C0B) : Colors.grey[700],
               ),
             ),
           ],
@@ -76,6 +64,4 @@ class DisplayTypeRadio extends StatelessWidget {
       ),
     );
   }
-
-
 }

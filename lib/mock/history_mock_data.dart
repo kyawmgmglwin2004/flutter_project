@@ -1,4 +1,5 @@
 import 'dart:math';
+
 enum DisplayType { hourly, daily, monthly }
 
 class PowerHistoryData {
@@ -34,7 +35,6 @@ List<PowerHistoryData> getMockHourlyData(int year, int month, int day) {
   });
 }
 
-
 List<PowerHistoryData> getMockDailyData(int year, int month) {
   final random = Random();
   final daysInMonth = DateTime(year, month + 2, 0).day;
@@ -52,8 +52,11 @@ List<PowerHistoryData> getMockDailyData(int year, int month) {
   });
 }
 
-
-List<PowerHistoryData> getMockMonthlyData(int year,  int startMonth, int endMonth) {
+List<PowerHistoryData> getMockMonthlyData(
+  int year,
+  int startMonth,
+  int endMonth,
+) {
   final random = Random();
 
   return List.generate(endMonth - startMonth + 1, (index) {

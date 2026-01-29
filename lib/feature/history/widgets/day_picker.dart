@@ -22,37 +22,40 @@ Widget buildHourlyDateSelection(BuildContext context) {
             color: Color(0xFF843C0B),
           ),
         ),
-    
+
         Row(
           children: [
             Container(
-                width: 200,
-                // padding: const EdgeInsets.only(bott ),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.brown, width: 2),
-                  borderRadius: BorderRadius.circular(7),
-                ),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.calendar_month,
-                          size: 28, color: Color(0xFF843C0B)),
-                      onPressed: () {
-                        provider.toggleCalendarPanel();
-                      },
-                    ),
-                    SizedBox(width: 20,),
-                    Text(
-                      dateFormat.format(provider.selectedDate),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                  ],
-                ),
+              width: 200,
+              // padding: const EdgeInsets.only(bott ),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.brown, width: 2),
+                borderRadius: BorderRadius.circular(7),
               ),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.calendar_month,
+                      size: 28,
+                      color: Color(0xFF843C0B),
+                    ),
+                    onPressed: () {
+                      provider.toggleCalendarPanel();
+                    },
+                  ),
+                  SizedBox(width: 20),
+                  Text(
+                    dateFormat.format(provider.selectedDate),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ],
+              ),
+            ),
             const SizedBox(width: 30),
             ElevatedButton(
               onPressed: () {

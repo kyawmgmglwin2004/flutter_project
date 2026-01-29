@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:ntt/feature/history/widgets/year_picker.dart';
 import 'package:provider/provider.dart';
 
-
 import '../../../mock/history_mock_data.dart';
 import '../controllers/history_controller.dart';
 import 'day_picker.dart';

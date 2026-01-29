@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
@@ -39,8 +38,11 @@ class MonthPickerRow extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.calendar_month,
-                          size: 30, color: Color(0xFF843C0B)),
+                      icon: Icon(
+                        Icons.calendar_month,
+                        size: 30,
+                        color: Color(0xFF843C0B),
+                      ),
                       onPressed: () {
                         showCustomMonthPicker(context);
                       },

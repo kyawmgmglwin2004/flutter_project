@@ -4,11 +4,17 @@ import 'package:provider/provider.dart';
 
 import '../../../mock/history_mock_data.dart';
 import '../controllers/history_controller.dart';
+
 Widget buildGraphArea(BuildContext context) {
   final provider = context.watch<HistoryProvider>();
 
   if (provider.currentData.isEmpty) {
-    return const Center(child: Text('No data available'));
+    return const Center(
+      child: CircularProgressIndicator(
+        color: Color(0xFFC55A11),
+        strokeWidth: 5,
+      ),
+    );
   }
 
   final maxY = provider.getMaxValue() * 1.5;
@@ -65,17 +71,21 @@ Widget buildGraphArea(BuildContext context) {
                             drawVerticalLine: false,
                             horizontalInterval: 10000,
                             drawHorizontalLine: true,
-                              getDrawingHorizontalLine: (value) {
-                        return FlLine(
-                        color: provider.selectedDisplayType == DisplayType.hourly
-                        ? Colors.green
-                            : provider.selectedDisplayType == DisplayType.daily
-                        ? Colors.red
-                            : Colors.blue,
-                        strokeWidth: 2,
-                        dashArray: [8,4 ],
-                        );
-                        },
+                            getDrawingHorizontalLine: (value) {
+                              return FlLine(
+                                color:
+                                    provider.selectedDisplayType ==
+                                        DisplayType.hourly
+                                    ? Colors.green
+                                    : provider.selectedDisplayType ==
+                                          DisplayType.daily
+                                    ? Colors.red
+                                    : Colors.blue,
+                                strokeWidth: 2,
+
+                                // dashArray: [8,4 ],
+                              );
+                            },
                           ),
                           borderData: FlBorderData(show: false),
                           titlesData: FlTitlesData(
@@ -96,8 +106,10 @@ Widget buildGraphArea(BuildContext context) {
                               ),
                             ),
                             bottomTitles: const AxisTitles(
-                              sideTitles:
-                              SideTitles(showTitles: true, reservedSize: 30),
+                              sideTitles: SideTitles(
+                                showTitles: true,
+                                reservedSize: 30,
+                              ),
                             ),
                             topTitles: const AxisTitles(
                               sideTitles: SideTitles(showTitles: false),
@@ -127,9 +139,12 @@ Widget buildGraphArea(BuildContext context) {
                                   enabled: true,
                                   touchTooltipData: BarTouchTooltipData(
                                     tooltipPadding: const EdgeInsets.all(8),
-                                    // tooltipMargin: 8,
 
-                                    tooltipBorder: BorderSide(color: Colors.red.withOpacity(0.6), width: 2),
+                                    // tooltipMargin: 8,
+                                    tooltipBorder: BorderSide(
+                                      color: Colors.red.withOpacity(0.6),
+                                      width: 2,
+                                    ),
                                     tooltipMargin: 12,
                                     fitInsideHorizontally: true,
                                     fitInsideVertically: true,
@@ -137,28 +152,30 @@ Widget buildGraphArea(BuildContext context) {
 
                                     getTooltipItem:
                                         (group, groupIndex, rod, rodIndex) {
-                                      final item =
-                                      provider.currentData[group.x.toInt()];
+                                          final item = provider
+                                              .currentData[group.x.toInt()];
 
-                                      late String label;
-                                      late double value;
+                                          late String label;
+                                          late double value;
 
-                                      if (rodIndex == 0) {
-                                        label = '発電電力量(kWh/m2)';
-                                        value = item.generatedEnergy;
-                                      } else if (rodIndex == 1) {
-                                        label = '自家消費量(kWh/m2)';
-                                        value = item.selfConsumption;
-                                      } else {
-                                        label = '使用電力量(kWh/m2)';
-                                        value = item.powerUsage;
-                                      }
+                                          if (rodIndex == 0) {
+                                            label = '発電電力量(kWh)';
+                                            value = item.generatedEnergy;
+                                          } else if (rodIndex == 1) {
+                                            label = '自家消費量(kWh)';
+                                            value = item.selfConsumption;
+                                          } else {
+                                            label = '使用電力量(kWh)';
+                                            value = item.powerUsage;
+                                          }
 
-                                      return BarTooltipItem(
-                                        '$label: ${value.toStringAsFixed(1)} ',
-                                        const TextStyle(color: Colors.white),
-                                      );
-                                    },
+                                          return BarTooltipItem(
+                                            '$label: ${value.toStringAsFixed(1)} ',
+                                            const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          );
+                                        },
                                   ),
                                 ),
                                 titlesData: FlTitlesData(
@@ -172,31 +189,17 @@ Widget buildGraphArea(BuildContext context) {
                                       getTitlesWidget: (value, meta) {
                                         final index = value.toInt();
                                         if (index < 0 ||
-                                            index >= provider.currentData.length) {
+                                            index >=
+                                                provider.currentData.length) {
                                           return const SizedBox();
                                         }
-                                        String label = provider.currentData[index].label;
-
-                                        // if (index == provider.currentData.length - 1) {
-                                        //   String unit = '';
-                                        //   if (provider.selectedDisplayType ==
-                                        //       DisplayType.hourly) {
-                                        //     unit = '時';
-                                        //   } else if (provider.selectedDisplayType ==
-                                        //       DisplayType.daily) {
-                                        //     unit = '日';
-                                        //   } else if (provider.selectedDisplayType ==
-                                        //       DisplayType.monthly) {
-                                        //     unit = '月';
-                                        //   }
-                                        //
-                                        //   // label နောက်မှာ unit ဆက်တယ် (ဥပမာ - 31日)
-                                        //   label = '$label$unit';
-                                        // }
-
+                                        String label =
+                                            provider.currentData[index].label;
 
                                         return Padding(
-                                          padding: const EdgeInsets.only(top: 4),
+                                          padding: const EdgeInsets.only(
+                                            top: 4,
+                                          ),
                                           child: Text(
                                             '$label',
                                             style: const TextStyle(
@@ -222,11 +225,12 @@ Widget buildGraphArea(BuildContext context) {
                                 borderData: FlBorderData(
                                   show: true,
                                   border: Border.all(
-                                    color: provider.selectedDisplayType ==
-                                        DisplayType.hourly
+                                    color:
+                                        provider.selectedDisplayType ==
+                                            DisplayType.hourly
                                         ? Colors.green
                                         : provider.selectedDisplayType ==
-                                        DisplayType.daily
+                                              DisplayType.daily
                                         ? Colors.red
                                         : Colors.blue,
                                   ),
@@ -239,13 +243,14 @@ Widget buildGraphArea(BuildContext context) {
                       ),
                     ),
                     Column(
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 320,),
-                          Text(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 320),
+                        Text(
                           provider.selectedDisplayType == DisplayType.hourly
                               ? '( 時 )'
-                              : provider.selectedDisplayType == DisplayType.daily
+                              : provider.selectedDisplayType ==
+                                    DisplayType.daily
                               ? '( 日 )'
                               : '( 月 )',
                           style: const TextStyle(
@@ -254,7 +259,7 @@ Widget buildGraphArea(BuildContext context) {
                             color: Colors.black54,
                           ),
                         ),
-                        ]
+                      ],
                     ),
                   ],
                 ),
